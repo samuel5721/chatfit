@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 
 class CameraScreen extends StatefulWidget {
   const CameraScreen({super.key});
@@ -36,10 +36,11 @@ class _CameraScreenState extends State<CameraScreen> {
     });
 
     File file = File(_image!.path);
+
+    const uuid = Uuid();
+    String fileName = '${uuid.v4()}.png';
     try {
-      await FirebaseStorage.instance
-          .ref('uploads/${file.path.split('/').last}')
-          .putFile(file);
+      await FirebaseStorage.instance.ref('uploads/$fileName').putFile(file);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('File uploaded successfully')),
       );
@@ -110,7 +111,7 @@ class _CameraScreenState extends State<CameraScreen> {
   Widget _buildUploadButton() {
     return _image != null
         ? _isUploading
-            ? CircularProgressIndicator()
+            ? const CircularProgressIndicator()
             : ElevatedButton(
                 onPressed: _uploadImage,
                 child: const Text("업로드하기"),
