@@ -10,16 +10,24 @@ class MainScreen extends StatelessWidget {
           appBar: AppBar(
             title: const Text('Main Screen'),
           ),
-          body: Column(
-            children: [
-              const Text('Main Screen'),
-              ElevatedButton(
-                child: const Text('goto CameraScreen'),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/camera');
-                },
-              ),
-            ],
+          body: Center(
+            child: Column(
+              children: [
+                const Text('Main Screen'),
+                ElevatedButton(
+                  child: const Text('goto CameraScreen'),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/camera');
+                  },
+                ),
+                ElevatedButton(
+                  child: const Text('goto ChatBoxScreen'),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/chatbox');
+                  },
+                ),
+              ],
+            ),
           )),
     );
   }
