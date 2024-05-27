@@ -6,27 +6,35 @@ class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Main Screen'),
+      appBar: AppBar(
+        title: const Text('Main Screen'),
+      ),
+      body: Center(
+        child: Column(
+          children: [
+            const Text('Main Screen'),
+            LocateButton(location: 'camera'),
+            LocateButton(location: 'chatbox'),
+            LocateButton(location: 'inputs'),
+          ],
         ),
-        body: Center(
-          child: Column(
-            children: [
-              const Text('Main Screen'),
-              ElevatedButton(
-                child: const Text('goto CameraScreen'),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/camera');
-                },
-              ),
-              ElevatedButton(
-                child: const Text('goto ChatBoxScreen'),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/chatbox');
-                },
-              ),
-            ],
-          ),
-        ));
+      ),
+    );
+  }
+}
+
+class LocateButton extends StatelessWidget {
+  String location;
+
+  LocateButton({super.key, required this.location});
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      child: Text('goto $location'),
+      onPressed: () {
+        Navigator.pushNamed(context, '/$location');
+      },
+    );
   }
 }
