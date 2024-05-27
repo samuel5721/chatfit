@@ -5,30 +5,28 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Placeholder(
-      child: Scaffold(
-          appBar: AppBar(
-            title: const Text('Main Screen'),
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Main Screen'),
+        ),
+        body: Center(
+          child: Column(
+            children: [
+              const Text('Main Screen'),
+              ElevatedButton(
+                child: const Text('goto CameraScreen'),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/camera');
+                },
+              ),
+              ElevatedButton(
+                child: const Text('goto ChatBoxScreen'),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/chatbox');
+                },
+              ),
+            ],
           ),
-          body: Center(
-            child: Column(
-              children: [
-                const Text('Main Screen'),
-                ElevatedButton(
-                  child: const Text('goto CameraScreen'),
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/camera');
-                  },
-                ),
-                ElevatedButton(
-                  child: const Text('goto ChatBoxScreen'),
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/chatbox');
-                  },
-                ),
-              ],
-            ),
-          )),
-    );
+        ));
   }
 }
