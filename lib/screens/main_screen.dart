@@ -16,6 +16,7 @@ class MainScreen extends StatelessWidget {
             LocateButton(location: 'camera'),
             LocateButton(location: 'chatbox'),
             LocateButton(location: 'inputs'),
+            LocateButton(location: 'calender'),
           ],
         ),
       ),
