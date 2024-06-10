@@ -104,6 +104,7 @@ class _InputsScreenState extends State<InputsScreen> {
             decoration: const InputDecoration(
               labelText: '이름',
               hintText: '이름을 입력하세요',
+              errorText: '글자 수 넘음',
             ),
             onChanged: (value) {
               setState(() {

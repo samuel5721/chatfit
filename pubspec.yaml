@@ -38,6 +38,7 @@ dependencies:
   firebase_core: ^2.11.0
   firebase_storage: ^11.6.0
   uuid: ^4.2.2
+  flutter_tts: ^4.0.2
 
 dev_dependencies:
   flutter_test:

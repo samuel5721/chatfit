@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_tts/flutter_tts.dart';
 import 'dart:convert';
 
 class ChatBoxScreen extends StatefulWidget {
@@ -13,12 +14,17 @@ class _ChatBoxScreenState extends State<ChatBoxScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _aniController;
   final TextEditingController _textController = TextEditingController();
+  final TextEditingController _ttsTextController = TextEditingController();
   String _response = '';
+
+  final FlutterTts tts = FlutterTts();
 
   @override
   void initState() {
     super.initState();
     _aniController = AnimationController(vsync: this);
+    tts.setLanguage('ko-KR');
+    tts.setSpeechRate(0.5);
   }
 
   @override
@@ -30,8 +36,7 @@ class _ChatBoxScreenState extends State<ChatBoxScreen>
   Future<void> generateResponse() async {
     final String prompt = _textController.text;
     const String model = 'gpt-4o';
-    const String apiKey =
-        '<API KEY>'; // ! must be hidden
+    const String apiKey = '<API KEY>'; // ! must be hidden
 
     final url = Uri.parse('https://api.openai.com/v1/chat/completions');
     final headers = {
@@ -103,6 +108,19 @@ class _ChatBoxScreenState extends State<ChatBoxScreen>
               _response,
               style: const TextStyle(fontSize: 16),
             ),
+            const SizedBox(height: 20),
+            TextField(
+              controller: _ttsTextController,
+              decoration: const InputDecoration(
+                hintText: 'Enter to Text-to-Speech message',
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                tts.speak(_ttsTextController.text);
+              },
+              child: const Text('Text-to-Speech'),
+            )
           ],
         ),
       ),
