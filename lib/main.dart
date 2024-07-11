@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:second_application/routes.dart';
+import 'package:chatfit/routes.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
@@ -21,7 +21,15 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primaryColor: const Color(0xff1B1D29),
+        scaffoldBackgroundColor: const Color(0xff1B1D29),
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+          primary: const Color(0xffFF3F00),
+        ),
+        textTheme: Typography.blackMountainView.apply(
+          bodyColor: Colors.white,
+          displayColor: Colors.white,
+        ),
       ),
       routes: routes,
     );
