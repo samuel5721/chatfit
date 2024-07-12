@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -17,6 +18,7 @@ class MainScreen extends StatelessWidget {
             LocateButton(location: 'chatbox'),
             LocateButton(location: 'inputs'),
             LocateButton(location: 'calender'),
+            LocateButton(location: 'firstservey'),
           ],
         ),
       ),
