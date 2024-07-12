@@ -1,3 +1,4 @@
+import 'package:chatfit/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:chatfit/routes.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -24,11 +25,11 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
-          primaryColor: const Color(0xff1B1D29),
-          scaffoldBackgroundColor: const Color(0xff1B1D29),
+          primaryColor: KeyColor.primaryDark300,
+          scaffoldBackgroundColor: KeyColor.primaryDark300,
           colorScheme: ColorScheme.fromSwatch().copyWith(
-            primary: const Color(0xffFF3F00),
-            secondary: const Color(0xffffffff),
+            primary: KeyColor.primaryBrand300,
+            secondary: Colors.white,
           ),
           textTheme: Typography.blackMountainView.apply(
             bodyColor: Colors.white,
