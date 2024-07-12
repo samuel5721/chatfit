@@ -1,0 +1,22 @@
+import 'package:flutter/material.dart';
+
+class KeyColor {
+  static Color primaryDark100 = const Color(0xff33374E);
+  static Color primaryDark200 = const Color(0xff252737);
+  static Color primaryDark300 = const Color(0xff1B1D29);
+
+  static Color primaryBrand100 = const Color(0xffFF8C66);
+  static Color primaryBrand200 = const Color(0xffAA6554);
+  static Color primaryBrand300 = const Color(0xffFF3F00);
+
+  static Color gray100 = const Color(0xffFDFEFE);
+  static Color gray200 = const Color(0xffF4F5F5);
+  static Color gray300 = const Color(0xffEAEBEB);
+  static Color gray400 = const Color(0xffDADDDD);
+  static Color gray500 = const Color(0xffB4B9B9);
+  static Color gray600 = const Color(0xff808989);
+  static Color gray700 = const Color(0xff626A6B);
+  static Color gray800 = const Color(0xff4B5152);
+  static Color gray900 = const Color(0xff333738);
+  static Color gray1000 = const Color(0xff1C1F1F);
+}
