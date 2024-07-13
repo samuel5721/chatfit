@@ -6,14 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Firebase 초기화 부분을 try-catch로 감싸서 오류를 확인합니다.
-  try {
-    await Firebase.initializeApp();
-  } catch (e) {
-    print('Firebase initialization error: $e');
-  }
-
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
