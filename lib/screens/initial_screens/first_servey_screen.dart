@@ -39,7 +39,7 @@ class _FirstServeyScreenState extends State<FirstServeyScreen> {
                                 height: 100.h,
                                 child: Column(
                                   children: [
-                                    const SizedBox(height: 90),
+                                    SizedBox(height: 90.h),
                                     LinearProgressIndicator(
                                       backgroundColor: Colors.white,
                                       borderRadius: BorderRadius.circular(10),

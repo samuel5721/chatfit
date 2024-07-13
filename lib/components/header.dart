@@ -8,6 +8,7 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
     return AppBar(
+      automaticallyImplyLeading: false,
       title: SizedBox(
         width: screenWidth,
         child: Image.asset('assets/images/small_logo.png'),

@@ -6,7 +6,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+
+  // Firebase 초기화 부분을 try-catch로 감싸서 오류를 확인합니다.
+  try {
+    await Firebase.initializeApp();
+  } catch (e) {
+    print('Firebase initialization error: $e');
+  }
+
   runApp(const MyApp());
 }
 
@@ -38,8 +45,9 @@ class _MyAppState extends State<MyApp> {
         ),
         builder: (context, child) {
           return MediaQuery(
-              data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-              child: child!);
+            data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+            child: child!,
+          );
         },
         routes: routes,
       ),
