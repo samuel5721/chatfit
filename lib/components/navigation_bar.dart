@@ -32,7 +32,7 @@ class _MainNavigationBarState extends State<MainNavigationBar> {
         Navigator.pushNamed(context, '/');
         break;
       case 3:
-        Navigator.pushNamed(context, '/404');
+        Navigator.pushNamed(context, '/chatbox');
         break;
       default:
         Navigator.pushNamed(context, '/404');
@@ -61,15 +61,15 @@ class _MainNavigationBarState extends State<MainNavigationBar> {
         child: BottomNavigationBar(
           items: [
             BottomNavigationBarItem(
-                icon: Icon(Icons.dining_sharp, size: 35.w), label: 'home'),
+                icon: Icon(Icons.dining_sharp, size: 35.w), label: 'food'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.fitness_center, size: 35.w), label: 'home'),
+                icon: Icon(Icons.fitness_center, size: 35.w), label: 'fitness'),
             BottomNavigationBarItem(
                 icon: Icon(Icons.home, size: 35.w), label: 'home'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.line_axis, size: 35.w), label: 'home'),
+                icon: Icon(Icons.chat, size: 35.w), label: 'chat'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.settings, size: 35.w), label: 'home'),
+                icon: Icon(Icons.line_axis, size: 35.w), label: 'statics'),
           ],
           currentIndex: Provider.of<LocateProvider>(context).getLocation(),
           type: BottomNavigationBarType.fixed,
