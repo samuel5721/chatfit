@@ -20,3 +20,27 @@ class KeyColor {
   static Color gray900 = const Color(0xff333738);
   static Color gray1000 = const Color(0xff1C1F1F);
 }
+
+class Layout {
+  static double entireWidth(BuildContext context) {
+    return MediaQuery.of(context).size.width;
+  }
+
+  static double entireHeight(BuildContext context) {
+    return MediaQuery.of(context).size.height;
+  }
+
+  static double headerHeight(BuildContext context) {
+    return entireHeight(context) * 0.1;
+  }
+
+  static double navigationBarHeight(BuildContext context) {
+    return entireHeight(context) * 0.075;
+  }
+
+  static double bodyHeight(BuildContext context) {
+    return entireHeight(context) -
+        headerHeight(context) -
+        navigationBarHeight(context);
+  }
+}

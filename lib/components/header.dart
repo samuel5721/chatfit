@@ -1,3 +1,4 @@
+import 'package:chatfit/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -6,16 +7,15 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double screenWidth = MediaQuery.of(context).size.width;
-    return AppBar(
-      automaticallyImplyLeading: false,
-      title: SizedBox(
-        width: screenWidth,
-        child: Image.asset('assets/images/small_logo.png'),
+    return SizedBox(
+      height: Layout.headerHeight(context),
+      child: AppBar(
+        automaticallyImplyLeading: false,
+        title: Image.asset('assets/images/small_logo.png'),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
-      centerTitle: true,
-      backgroundColor: Colors.transparent,
-      elevation: 0,
     );
   }
 

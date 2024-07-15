@@ -50,7 +50,7 @@ class _MainNavigationBarState extends State<MainNavigationBar> {
       padding: EdgeInsets.all(10.0.h),
       child: Container(
         width: screenWidth * 0.9,
-        height: screenHeight * 0.08,
+        height: Layout.navigationBarHeight(context),
         decoration: BoxDecoration(
           border: Border.all(
             color: KeyColor.primaryBrand300,
