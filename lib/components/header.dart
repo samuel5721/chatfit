@@ -11,7 +11,13 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
       height: Layout.headerHeight(context),
       child: AppBar(
         automaticallyImplyLeading: false,
-        title: Image.asset('assets/images/small_logo.png'),
+        title: SizedBox(
+          width: 1000.w,
+          child: Image.asset(
+            'assets/images/small_logo.png',
+            fit: BoxFit.cover,
+          ),
+        ),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,

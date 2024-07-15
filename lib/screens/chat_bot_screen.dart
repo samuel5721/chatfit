@@ -7,14 +7,14 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_tts/flutter_tts.dart';
 import 'dart:convert';
 
-class ChatBoxScreen extends StatefulWidget {
-  const ChatBoxScreen({super.key});
+class ChatBoTScreen extends StatefulWidget {
+  const ChatBoTScreen({super.key});
 
   @override
-  State<ChatBoxScreen> createState() => _ChatBoxScreenState();
+  State<ChatBoTScreen> createState() => _ChatBoTScreenState();
 }
 
-class _ChatBoxScreenState extends State<ChatBoxScreen>
+class _ChatBoTScreenState extends State<ChatBoTScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _aniController;
   final TextEditingController _textController = TextEditingController();
@@ -90,8 +90,9 @@ class _ChatBoxScreenState extends State<ChatBoxScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: const Header(),
-      body: Center(
+      body: SingleChildScrollView(
         child: Column(
           children: [
             Row(
@@ -132,60 +133,23 @@ class _ChatBoxScreenState extends State<ChatBoxScreen>
             SizedBox(height: Layout.bodyHeight(context) * 0.05),
             SizedBox(
               height: Layout.bodyHeight(context) * 0.80,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(
-                      width: Layout.entireWidth(context) * 0.9,
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 40.w,
-                            height: 40.w,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                            ),
-                            child: Image.asset(
-                              'assets/images/chatfit_circle.png',
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(16),
-                            margin: EdgeInsets.only(left: 10.w),
-                            decoration: BoxDecoration(
-                              color: KeyColor.primaryDark100,
-                              borderRadius: BorderRadius.circular(100),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                ConstrainedBox(
-                                  constraints: BoxConstraints(
-                                    maxWidth: Layout.entireWidth(context) * 0.6,
-                                  ),
-                                  child: Text(
-                                    '좋은 아침이에요! 오늘도 힘차게 시작해봐요! 아침은 닭가슴살 샐러드 어때요?',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12.sp,
-                                    ),
-                                    softWrap: true,
-                                    overflow: TextOverflow.visible,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+              child: Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      const BotChat(
+                          message:
+                              '좋은 아침이에요! 오늘도 힘차게 시작해봐요! 이번 주에는 어떤 식사를 추천해드릴까요?'),
+                      SizedBox(height: 20.h),
+                      const ClientChat(message: '오늘의 운동 추천해줘'),
+                      SizedBox(height: 20.h),
+                      SizedBox(height: 100.w),
+                      Text(
+                        _response,
+                        style: const TextStyle(fontSize: 16),
                       ),
-                    ),
-                    SizedBox(height: 100.w),
-                    Text(
-                      _response,
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -198,10 +162,10 @@ class _ChatBoxScreenState extends State<ChatBoxScreen>
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       decoration: BoxDecoration(
-                        color: KeyColor.primaryDark300,
+                        color: Colors.transparent,
                         border: Border.all(
                           color: Colors.white,
-                          width: 2,
+                          width: 1.5,
                         ),
                         borderRadius: BorderRadius.circular(100),
                       ),
@@ -230,6 +194,126 @@ class _ChatBoxScreenState extends State<ChatBoxScreen>
         ),
       ),
       bottomNavigationBar: const MainNavigationBar(),
+    );
+  }
+}
+
+class BotChat extends StatelessWidget {
+  final String message;
+
+  const BotChat({
+    super.key,
+    required this.message,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.9,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 40.0.w,
+            height: 40.0.w,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(100),
+            ),
+            child: Image.asset(
+              'assets/images/chatfit_circle.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+            margin: const EdgeInsets.only(left: 10.0),
+            decoration: BoxDecoration(
+              color: KeyColor.primaryDark100,
+              borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(50),
+                bottomRight: Radius.circular(50),
+                bottomLeft: Radius.circular(50),
+              ),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width * 0.6,
+                  ),
+                  child: Text(
+                    message,
+                    style: TextStyle(
+                      color: KeyColor.gray100,
+                      fontSize: 12.sp,
+                      height: 1.5,
+                    ),
+                    softWrap: true,
+                    overflow: TextOverflow.visible,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ClientChat extends StatelessWidget {
+  final String message;
+
+  const ClientChat({
+    super.key,
+    required this.message,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.9,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+            margin: const EdgeInsets.only(left: 10.0),
+            decoration: BoxDecoration(
+              color: KeyColor.primaryBrand300,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(50),
+                bottomRight: Radius.circular(50),
+                bottomLeft: Radius.circular(50),
+              ),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width * 0.6,
+                  ),
+                  child: Text(
+                    message,
+                    style: TextStyle(
+                      color: KeyColor.gray100,
+                      fontSize: 12.sp,
+                      height: 1.5,
+                    ),
+                    softWrap: true,
+                    overflow: TextOverflow.visible,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

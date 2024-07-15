@@ -16,8 +16,7 @@ class MainScreen extends StatelessWidget {
       body: Center(
         child: (!isHidden)
             ? const Column(
-                mainAxisAlignment: MainAxisAlignment
-                    .center, // 추가된 부분: Column 내의 위젯들을 가운데로 정렬합니다.
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                       '디버깅 페이지입니다. 만약 홈 화면이 필요하다면 코드에서 isHidden을 false로 변경하세요.'),
@@ -28,8 +27,7 @@ class MainScreen extends StatelessWidget {
                 ],
               )
             : const Column(
-                mainAxisAlignment: MainAxisAlignment
-                    .center, // 추가된 부분: Column 내의 위젯들을 가운데로 정렬합니다.
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text('dd'),
                 ],

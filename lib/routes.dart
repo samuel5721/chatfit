@@ -3,7 +3,7 @@ import 'package:chatfit/screens/initial_screens/first_servey_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:chatfit/screens/calender_screen.dart';
 import 'package:chatfit/screens/camera_screen.dart';
-import 'package:chatfit/screens/chat_box_screen.dart';
+import 'package:chatfit/screens/chat_bot_screen.dart';
 import 'package:chatfit/screens/main_screen.dart';
 
 final routes = {
