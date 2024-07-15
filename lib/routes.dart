@@ -9,7 +9,7 @@ import 'package:chatfit/screens/main_screen.dart';
 final routes = {
   '/': (BuildContext context) => const MainScreen(),
   '/camera': (BuildContext context) => const CameraScreen(),
-  '/chatbox': (BuildContext context) => const ChatBoxScreen(),
+  '/chatbox': (BuildContext context) => const ChatBoTScreen(),
   '/calender': (BuildContext context) => const CalenderScreen(
         title: 'calender',
       ),
