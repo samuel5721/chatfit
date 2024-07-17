@@ -6,10 +6,11 @@ import 'package:flutter/material.dart';
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
 
-  final bool isHidden = false; // 홈 화면이 필요하다면 이 값을 false로 변경
+  final bool isHidden = true; // 홈 화면이 필요하다면 이 값을 false로 변경
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: KeyColor.primaryDark300,
       appBar: const Header(),
@@ -26,10 +27,19 @@ class MainScreen extends StatelessWidget {
                   LocateButton(location: 'firstservey'),
                 ],
               )
-            : const Column(
+            : Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('dd'),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: KeyColor.primaryDark200,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: SizedBox(
+                      width: Layout.entireWidth(context) * 0.9,
+                      child: Text('김진욱 님은 상위 3일 연속 출석하고 있어요!'),
+                    ),
+                  ),
                 ],
               ),
       ),
