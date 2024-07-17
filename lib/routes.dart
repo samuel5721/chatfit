@@ -13,6 +13,6 @@ final routes = {
   '/calender': (BuildContext context) => const CalenderScreen(
         title: 'calender',
       ),
-  '/firstservey': (BuildContext context) => const FirstServeyScreen(),
+  '/firstservey': (BuildContext context) => const FirstSurveyScreen(),
   '/404': (BuildContext context) => const NotFoundScreen(),
 };
