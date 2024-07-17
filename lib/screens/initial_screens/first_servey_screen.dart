@@ -1,3 +1,4 @@
+import 'package:chatfit/theme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,9 +17,6 @@ class _FirstServeyScreenState extends State<FirstServeyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double screenWidth = MediaQuery.of(context).size.width;
-    final double screenHeight = MediaQuery.of(context).size.height;
-
     return Scaffold(
       body: SingleChildScrollView(
         child: Center(
@@ -27,7 +25,7 @@ class _FirstServeyScreenState extends State<FirstServeyScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SizedBox(
-                height: screenHeight * 0.85,
+                height: Layout.entireHeight(context) * 0.85,
                 child: (progress == 0)
                     ? const FirstBox()
                     : (progress > 0)
@@ -35,7 +33,7 @@ class _FirstServeyScreenState extends State<FirstServeyScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               SizedBox(
-                                width: screenWidth * 0.75,
+                                width: Layout.entireWidth(context) * 0.75,
                                 height: 100.h,
                                 child: Column(
                                   children: [
@@ -50,8 +48,9 @@ class _FirstServeyScreenState extends State<FirstServeyScreen> {
                                 ),
                               ),
                               SizedBox(
-                                width: screenWidth * 0.9,
-                                height: screenHeight * 0.85 - 100.h,
+                                width: Layout.entireWidth(context) * 0.9,
+                                height:
+                                    Layout.entireHeight(context) * 0.85 - 100.h,
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -60,7 +59,7 @@ class _FirstServeyScreenState extends State<FirstServeyScreen> {
                                     ),
                                     SizedBox(height: 20.h),
                                     SizedBox(
-                                      width: screenWidth * 0.5,
+                                      width: Layout.entireWidth(context) * 0.5,
                                       child: TextField(
                                         keyboardType: TextInputType.number,
                                         inputFormatters: <TextInputFormatter>[
@@ -90,12 +89,12 @@ class _FirstServeyScreenState extends State<FirstServeyScreen> {
                         : Container(),
               ),
               SizedBox(
-                height: screenHeight * 0.15,
+                height: Layout.entireHeight(context) * 0.15,
                 child: Column(
                   children: [
                     SizedBox(
-                      width: screenWidth * 0.9,
-                      height: screenHeight * 0.15 - 60.h,
+                      width: Layout.entireWidth(context) * 0.9,
+                      height: Layout.entireHeight(context) * 0.15 - 60.h,
                       child: ElevatedButton(
                         onPressed: () {
                           setState(() {
@@ -136,14 +135,12 @@ class FirstBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double screenWidth = MediaQuery.of(context).size.width;
-    final double screenHeight = MediaQuery.of(context).size.height;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(
-          width: screenWidth * 0.8,
-          height: screenHeight * 0.3,
+          width: Layout.entireWidth(context) * 0.8,
+          height: Layout.entireHeight(context) * 0.3,
           child: Image.asset('assets/images/welcome.png'),
         ),
         SizedBox(height: 10.h),
