@@ -24,7 +24,7 @@ class MainScreen extends StatelessWidget {
                   LocateButton(location: 'camera'),
                   LocateButton(location: 'chatbox'),
                   LocateButton(location: 'calender'),
-                  LocateButton(location: 'firstservey'),
+                  LocateButton(location: 'firstsurvey'),
                 ],
               )
             : SingleChildScrollView(

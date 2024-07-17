@@ -1,5 +1,5 @@
 import 'package:chatfit/screens/404.dart';
-import 'package:chatfit/screens/initial_screens/first_servey_screen.dart';
+import 'package:chatfit/screens/initial_screens/first_survey_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:chatfit/screens/calender_screen.dart';
 import 'package:chatfit/screens/camera_screen.dart';
