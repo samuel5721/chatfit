@@ -35,7 +35,7 @@ class Layout {
   }
 
   static double navigationBarHeight(BuildContext context) {
-    return entireHeight(context) * 0.075;
+    return entireHeight(context) * 0.1;
   }
 
   static double bodyHeight(BuildContext context) {
