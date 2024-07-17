@@ -269,12 +269,13 @@ class _ChatBoTScreenState extends State<ChatBoTScreen>
                             child: TextField(
                               controller: _textController,
                               style: TextStyle(
-                                  color: Colors.white, fontSize: 14.sp),
+                                  color: Colors.white, fontSize: 16.sp),
                               decoration: InputDecoration(
                                 hintText: '메세지를 입력해 주세요',
                                 hintStyle: TextStyle(
-                                    color: const Color(0xffa6a6a6),
-                                    fontSize: 14.sp),
+                                  color: const Color(0xffa6a6a6),
+                                  fontSize: 14.sp,
+                                ),
                                 fillColor: Colors.white,
                                 border: InputBorder.none,
                               ),
@@ -357,7 +358,7 @@ class BotChat extends StatelessWidget {
                           message,
                           style: TextStyle(
                             color: KeyColor.gray100,
-                            fontSize: 12.sp,
+                            fontSize: 14.sp,
                             height: 1.5,
                           ),
                           softWrap: true,
@@ -412,7 +413,7 @@ class ClientChat extends StatelessWidget {
                     message,
                     style: TextStyle(
                       color: KeyColor.gray100,
-                      fontSize: 12.sp,
+                      fontSize: 14.sp,
                       height: 1.5,
                     ),
                     softWrap: true,

@@ -37,9 +37,10 @@ class _MyAppState extends State<MyApp> {
               secondary: Colors.white,
             ),
             textTheme: Typography.blackMountainView.apply(
-                bodyColor: Colors.white,
-                displayColor: Colors.white,
-                fontFamily: 'SUIT'),
+              bodyColor: Colors.white,
+              displayColor: Colors.white,
+              fontFamily: 'SUIT',
+            ),
           ),
           builder: (context, child) {
             return MediaQuery(
