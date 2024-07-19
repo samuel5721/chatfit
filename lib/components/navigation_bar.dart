@@ -32,7 +32,7 @@ class _MainNavigationBarState extends State<MainNavigationBar> {
         Navigator.pushNamed(context, '/');
         break;
       case 3:
-        Navigator.pushNamed(context, '/chatbox');
+        Navigator.pushNamed(context, '/chatbot');
         break;
       default:
         Navigator.pushNamed(context, '/firstservey');

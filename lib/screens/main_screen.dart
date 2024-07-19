@@ -1,8 +1,10 @@
 import 'package:chatfit/components/header.dart';
 import 'package:chatfit/components/navigation_bar.dart';
+import 'package:chatfit/locate_provider.dart';
 import 'package:chatfit/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -77,7 +79,12 @@ class MainScreen extends StatelessWidget {
                         const ContentText(text: '김진욱 님, 운동은 잘 되어가고 있나요?'),
                         const ContentText(text: '편하게 대화하세요!'),
                         SizedBox(height: 15.h),
-                        PrimaryButton(text: '채팅 시작하기', onPressed: () {})
+                        PrimaryButton(
+                            text: '채팅 시작하기',
+                            onPressed: () {
+                              context.read<LocateProvider>().setLocation(3);
+                              Navigator.pushNamed(context, '/chatbot');
+                            })
                       ]),
                     ),
                     SizedBox(height: 20.h),
@@ -190,7 +197,7 @@ class TitleText extends StatelessWidget {
 
 class PrimaryButton extends StatelessWidget {
   final String text;
-  final Function onPressed;
+  final void Function() onPressed;
 
   const PrimaryButton({
     super.key,
@@ -204,9 +211,7 @@ class PrimaryButton extends StatelessWidget {
       width: Layout.entireWidth(context) * 0.9,
       height: 45.h,
       child: ElevatedButton(
-        onPressed: () {
-          onPressed;
-        },
+        onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(100.0),
