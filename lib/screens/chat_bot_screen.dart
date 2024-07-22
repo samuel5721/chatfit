@@ -357,7 +357,7 @@ class BotChat extends StatelessWidget {
                       : Text(
                           message,
                           style: TextStyle(
-                            color: KeyColor.gray100,
+                            color: KeyColor.grey100,
                             fontSize: 14.sp,
                             height: 1.5,
                           ),
@@ -412,7 +412,7 @@ class ClientChat extends StatelessWidget {
                   child: Text(
                     message,
                     style: TextStyle(
-                      color: KeyColor.gray100,
+                      color: KeyColor.grey100,
                       fontSize: 14.sp,
                       height: 1.5,
                     ),

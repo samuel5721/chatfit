@@ -139,7 +139,7 @@ class ContentText extends StatelessWidget {
     return Text(
       text,
       style: TextStyle(
-        color: KeyColor.gray100,
+        color: KeyColor.grey100,
         fontSize: fontSize.sp,
         height: 1.h,
       ),
@@ -186,6 +186,7 @@ class PrimaryButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
+          backgroundColor: KeyColor.primaryBrand300,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(100.0),
           ),
