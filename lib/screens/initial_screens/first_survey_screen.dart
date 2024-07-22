@@ -228,8 +228,8 @@ class MultipleChoiceStep extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
-                        primary: Colors.white,
-                        onPrimary: Colors.black,
+                        // primary: Colors.white,
+                        // onPrimary: Colors.black,
                         padding: const EdgeInsets.symmetric(vertical: 16.0),
                       ),
                       child: Text(

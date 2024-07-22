@@ -21,7 +21,7 @@ class _MainNavigationBarState extends State<MainNavigationBar> {
     }
     switch (index) {
       case 0:
-        Navigator.pushNamed(context, '/404');
+        Navigator.pushNamed(context, '/dietrecord');
         break;
       case 1:
         Navigator.pushNamed(context, '/404');

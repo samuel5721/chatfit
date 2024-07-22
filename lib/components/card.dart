@@ -14,10 +14,10 @@ class WidgetCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: Layout.entireWidth(context) * 0.9,
+      width: 1.sw,
       decoration: BoxDecoration(
         color: KeyColor.primaryDark200,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(20.w),
       ),
       child: SizedBox(
         child: Padding(
