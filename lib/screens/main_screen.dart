@@ -1,10 +1,12 @@
-import 'package:chatfit/components/header.dart';
-import 'package:chatfit/components/navigation_bar.dart';
-import 'package:chatfit/locate_provider.dart';
-import 'package:chatfit/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+
+import 'package:chatfit/components/header.dart';
+import 'package:chatfit/components/navigation_bar.dart';
+import 'package:chatfit/components/card.dart';
+import 'package:chatfit/locate_provider.dart';
+import 'package:chatfit/theme.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -33,17 +35,17 @@ class MainScreen extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Card(
+                    const WidgetCard(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           ContentText(text: '김진욱 님은 3일 연속 출석하고 있어요!'),
-                          ContentText(text: '다른 회원 대비 상위 10% 에요!'),
+                          ContentText(text: '다른 회원 대비 상위 10% 예요!'),
                         ],
                       ),
                     ),
                     SizedBox(height: 20.h),
-                    Card(
+                    WidgetCard(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -74,7 +76,7 @@ class MainScreen extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 20.h),
-                    Card(
+                    WidgetCard(
                       child: Column(children: [
                         const ContentText(text: '김진욱 님, 운동은 잘 되어가고 있나요?'),
                         const ContentText(text: '편하게 대화하세요!'),
@@ -88,7 +90,7 @@ class MainScreen extends StatelessWidget {
                       ]),
                     ),
                     SizedBox(height: 20.h),
-                    Card(
+                    WidgetCard(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
@@ -118,35 +120,6 @@ class MainScreen extends StatelessWidget {
               ),
       ),
       bottomNavigationBar: const MainNavigationBar(),
-    );
-  }
-}
-
-class Card extends StatelessWidget {
-  final Widget child;
-
-  const Card({
-    super.key,
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: Layout.entireWidth(context) * 0.9,
-      decoration: BoxDecoration(
-        color: KeyColor.primaryDark200,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: SizedBox(
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: 20.w,
-            horizontal: 20.h,
-          ),
-          child: child,
-        ),
-      ),
     );
   }
 }

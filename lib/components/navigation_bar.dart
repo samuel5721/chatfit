@@ -1,6 +1,4 @@
 import 'package:chatfit/locate_provider.dart';
-import 'package:chatfit/screens/404.dart';
-import 'package:chatfit/screens/main_screen.dart';
 import 'package:chatfit/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
