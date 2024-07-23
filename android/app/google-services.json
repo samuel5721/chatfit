@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "793002804233",
-    "project_id": "second-project-b394f",
-    "storage_bucket": "second-project-b394f.appspot.com"
+    "project_number": "1087664966814",
+    "project_id": "chatfit-aac41",
+    "storage_bucket": "chatfit-aac41.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:793002804233:android:96b22c1d073d25b11124d8",
+        "mobilesdk_app_id": "1:1087664966814:android:9a262ecc97b7f52bc47f8f",
         "android_client_info": {
           "package_name": "com.example.second_application"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCB2ffjM4FiD7rqn3vT3Sl4NkB7AKvRxpI"
+          "current_key": "AIzaSyB8q847uT-HUr_r-cOSXZpvrVth3CjBHgQ"
         }
       ],
       "services": {

@@ -2,7 +2,6 @@ import 'package:chatfit/components/header.dart';
 import 'package:chatfit/components/navigation_bar.dart';
 import 'package:chatfit/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_tts/flutter_tts.dart';
