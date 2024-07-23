@@ -174,14 +174,14 @@ class _ChatBoTScreenState extends State<ChatBoTScreen>
                     onPressed: () => {/* tts.speak(_ttsTextController.text) */},
                     style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all(KeyColor.primaryDark300),
-                      side: MaterialStateProperty.all(
+                          WidgetStateProperty.all(KeyColor.primaryDark300),
+                      side: WidgetStateProperty.all(
                         BorderSide(
                           color: KeyColor.primaryBrand300,
                           width: 1,
                         ),
                       ),
-                      shape: MaterialStateProperty.all(
+                      shape: WidgetStateProperty.all(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(100),
                         ),
