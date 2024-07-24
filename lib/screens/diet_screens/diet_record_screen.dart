@@ -67,7 +67,29 @@ class _DietRecordScreenState extends State<DietRecordScreen> {
                 kcal: 400,
               ),
               SizedBox(height: 20.h),
-              const RequireRecordCard(time: '저녁')
+              const RequireRecordCard(time: '저녁'),
+              SizedBox(height: 20.h),
+              SizedBox(
+                width: 1.sw,
+                height: 50.h,
+                child: OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(
+                      color: KeyColor.grey100, // 테두리 색상
+                      width: 1.5.w, // 테두리 두께
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.w), // 모서리 반경
+                    ),
+                  ),
+                  onPressed: () {},
+                  child: const ContentText(
+                    text: '과거 식단 더보기',
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              SizedBox(height: 20.h),
             ],
           ),
         ),
@@ -131,7 +153,7 @@ class MealCard extends StatelessWidget {
           ),
           SizedBox(height: 20.h),
           ContentText(text: '$meal / $kcal kcal', fontSize: 20),
-          SizedBox(height: 30.h),
+          SizedBox(height: 20.h),
         ],
       ),
     );
@@ -167,9 +189,12 @@ class RequireRecordCard extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: KeyColor.primaryDark200,
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, '/dietrecord_camera');
+              },
               child: const ContentText(
                 text: '식단을 입력해 주세요!',
+                fontSize: 16,
               ),
             ),
           ),

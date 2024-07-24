@@ -1,6 +1,10 @@
 import 'dart:io';
+import 'package:chatfit/components/buttons.dart';
+import 'package:chatfit/components/header.dart';
+import 'package:chatfit/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 
@@ -58,12 +62,12 @@ class _CameraScreenState extends State<CameraScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Camera Screen")),
+      appBar: const Header(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(height: 30, width: double.infinity),
-          _buildPhotoArea(),
+          const SizedBox(height: 30),
+          _buildPhotoArea(context),
           const SizedBox(height: 20),
           _buildButton(),
           const SizedBox(height: 20),
@@ -73,36 +77,41 @@ class _CameraScreenState extends State<CameraScreen> {
     );
   }
 
-  Widget _buildPhotoArea() {
-    return _image != null
-        ? SizedBox(
-            width: 200,
-            height: 200,
-            child: Image.file(File(_image!.path)), // 가져온 이미지를 화면에 띄워주는 코드
-          )
-        : Container(
-            width: 200,
-            height: 200,
-            color: Colors.grey,
-          );
+  Widget _buildPhotoArea(BuildContext context) {
+    return SizedBox(
+      width: Layout.entireWidth(context) * 0.8,
+      height: Layout.bodyHeight(context) * 0.6,
+      child: (_image == null)
+          ? Container(
+              color: KeyColor.grey200,
+            )
+          : Image.file(
+              File(_image!.path),
+            ), // 가져온 이미지를 화면에 띄워주는 코드
+    );
   }
 
   Widget _buildButton() {
-    return Row(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        ElevatedButton(
+        PrimaryButton(
           onPressed: () {
             getImage(ImageSource.camera); // getImage 함수를 호출해서 카메라로 찍은 사진 가져오기
           },
-          child: const Text("카메라"),
+          text: '카메라에서 가져오기',
         ),
-        const SizedBox(width: 30),
-        ElevatedButton(
+        SizedBox(height: 10.h),
+        PrimaryButton(
           onPressed: () {
             getImage(ImageSource.gallery); // getImage 함수를 호출해서 갤러리에서 사진 가져오기
           },
-          child: const Text("갤러리"),
+          text: "갤러리에서 가져오기",
+        ),
+        SizedBox(height: 10.h),
+        SecondButton(
+          onPressed: () {},
+          text: "직접 입력",
         ),
       ],
     );
