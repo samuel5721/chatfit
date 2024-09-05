@@ -38,7 +38,7 @@ frontend/app.*.symbols
 # Obfuscation related
 frontend/app.*.map.json
 
-#backend related
+# backend related
 backend/.env
 
 # Android Studio will place build artifacts here
