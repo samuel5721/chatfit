@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1087664966814",
+    "project_id": "chatfit-aac41",
+    "storage_bucket": "chatfit-aac41.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1087664966814:android:9a262ecc97b7f52bc47f8f",
+        "android_client_info": {
+          "package_name": "com.example.second_application"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8q847uT-HUr_r-cOSXZpvrVth3CjBHgQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
