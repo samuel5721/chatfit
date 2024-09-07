@@ -171,36 +171,6 @@ class _FirstSurveyScreenState extends State<FirstSurveyScreen> {
     }
   ];
 
-  void validateAge(int input) {
-    if (input < 10 || input > 120) {
-      isRational = false;
-      errorMessage = '나이는 10세에서 120세 사이로 입력해 주세요.';
-    } else {
-      isRational = true;
-      errorMessage = '';
-    }
-  }
-
-  void validateHeight(int input) {
-    if (input < 50 || input > 250) {
-      isRational = false;
-      errorMessage = '키는 50cm에서 250cm 사이로 입력해 주세요.';
-    } else {
-      isRational = true;
-      errorMessage = '';
-    }
-  }
-
-  void validateWeight(int input) {
-    if (input < 10 || input > 300) {
-      isRational = false;
-      errorMessage = '몸무게는 10kg에서 300kg 사이로 입력해 주세요.';
-    } else {
-      isRational = true;
-      errorMessage = '';
-    }
-  }
-
   void multipleChoiceSelected(int index) {
     setState(() {
       _selectedIndex = index;
