@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:chatfit/components/buttons.dart';
 import 'package:chatfit/components/header.dart';
@@ -10,6 +11,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 //! 사진 입력 확인 받은 후 식단 인식 -> 계속하기 진행
 
@@ -98,14 +100,51 @@ class _CameraScreenState extends State<CameraScreen> {
       _isRecognizing = true;
     });
 
-    // 여기에 이미지 인식 코드를 넣어주세요.
+    if (_image == null) return;
 
-    menu = '레모네이드';
+    try {
+      File imageFile = File(_image!.path);
 
-    setState(() {
-      _isRecognized = true;
-      _isRecognizing = false;
-    });
+      // 이미지를 Multipart로 변환
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('http://127.0.0.1:8000/api/detect_cnn'), // 백엔드 엔드포인트
+      );
+
+      request.files.add(await http.MultipartFile.fromPath(
+        'image',
+        imageFile.path,
+      ));
+
+      var response = await request.send();
+
+      if (response.statusCode == 200) {
+        var responseBody = await http.Response.fromStream(response);
+        print('응답 내용: ${responseBody.body}'); // 응답 내용을 확인하기 위해 출력
+
+        var jsonResponse = jsonDecode(responseBody.body);
+
+        // 서버에서 반환된 결과를 menu에 저장
+        setState(() {
+          menu = jsonResponse['detected'].join(", "); // 음식 이름들을 쉼표로 구분
+          _isRecognized = true;
+        });
+      } else {
+        throw Exception(
+            'Failed to recognize diet. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('오류: $e')),
+        );
+        print('오류: $e');
+      }
+    } finally {
+      setState(() {
+        _isRecognizing = false;
+      });
+    }
   }
 
   void _removeImage() async {

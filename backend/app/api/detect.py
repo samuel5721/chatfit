@@ -6,22 +6,24 @@ import base64
 import json
 import os
 import dotenv
+import json
+
+def load_valid_foods(file_path: str) -> set:
+    with open(file_path, 'r') as f:
+        food_data = [json.loads(line) for line in f]
+    valid_foods = set()
+    for entry in food_data:
+        valid_foods.update(entry.get('food_items', [])) 
+    return valid_foods
+
 
 
 class FoodDetectionService:
-
-
-    @staticmethod
-    def encode_image_to_base64(image_bytes):
-        return base64.b64encode(image_bytes).decode('utf-8')
-
-    @staticmethod
-    def initialize_model(model_path: str) -> YOLO:
-        return YOLO(model_path)
+    
+    valid_foods = load_valid_foods('backend/app/weight/filtered_food_calories_no_partial_franchise.jsonl')
 
     @staticmethod
     def detect_food_with_gpt(img):
-    # Base64로 이미지를 인코딩
         base64_image = FoodDetectionService.encode_image_to_base64(img)
 
         headers = {
@@ -29,6 +31,9 @@ class FoodDetectionService:
             "Authorization": "Bearer " + os.getenv("OPENAI_API_KEY")
         }
 
+        # 음식 목록을 GPT에 전달하기 위한 텍스트 추가
+        food_list_str = ', '.join(FoodDetectionService.valid_foods)
+        
         payload = {
             "model": "gpt-4o-mini",
             "messages": [
@@ -38,7 +43,8 @@ class FoodDetectionService:
                         {
                             "type": "text",
                             "text": (
-                                "Tell me about the foods in this image. Please return in JSON format and only JSON.\n"
+                                f"Tell me about the foods in this image, but limit your answer to these items only: {food_list_str}. "
+                                "Please return in JSON format and only JSON.\n"
                                 "JSON structure:\n"
                                 "{'detected': [food1, food2, food3, ....]}"
                             )
@@ -57,32 +63,20 @@ class FoodDetectionService:
 
         response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
         content = response.json()['choices'][0]['message']['content']
-        
-        # 불필요한 문자열을 제거하여 순수 JSON 추출
+
+        # JSON 부분 추출 및 파싱
         start_index = content.find('{')
         end_index = content.rfind('}') + 1
         pure_json_str = content[start_index:end_index]
 
-        # JSON 문자열을 딕셔너리로 변환
         try:
             pure_json = json.loads(pure_json_str)
         except json.JSONDecodeError as e:
             print("JSON 변환 중 오류 발생:", e)
             pure_json = {}
 
-        return pure_json
+        # 응답에서 유효한 음식만 필터링
+        detected_foods = pure_json.get('detected', [])
+        filtered_foods = [food for food in detected_foods if food in FoodDetectionService.valid_foods]
 
-
-    @staticmethod
-    def detect_food(img, model: YOLO) -> Dict[str, Any]:
-        results = model.predict(img)
-        print(results)
-        detected_items = []
-        for b in results[0].boxes:
-            cls = model.names[int(b.cls)]
-            detected_items.append(cls)
-        if not detected_items:
-            detected_items = ['nothing detected']
-
-        return {'detected': list(set(detected_items))}
-    
+        return {'detected': filtered_foods}

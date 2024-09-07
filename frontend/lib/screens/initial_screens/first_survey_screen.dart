@@ -1,3 +1,4 @@
+import 'package:chatfit/components/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,290 +13,434 @@ class FirstSurveyScreen extends StatefulWidget {
 
 class _FirstSurveyScreenState extends State<FirstSurveyScreen> {
   int progress = 0;
-  final int length = 10;
 
-  void nextStep() {
+  TextEditingController _textController = TextEditingController();
+  int _selectedIndex = -1;
+  List<int> _selectedMultipleIndices = [];
+
+  bool isRational = true;
+  String errorMessage = '';
+
+  List<String> avoidFoodList = [
+    "닭고기",
+    "우유",
+    "메밀",
+    "땅콩",
+    "대두",
+    "밀",
+    "고등어",
+    "게",
+    "새우",
+    "돼지고기",
+    "복숭아",
+    "토마토",
+    "소고기",
+  ];
+
+  final List<Map<String, dynamic>> questions = [
+    // 0: Welcome, 1: Text, 2: Single Choice, 3: Multiple Choice, 4: End
+    {
+      'type': 0,
+    },
+    {
+      'type': 1,
+      'content': '나이가 어떻게 되세요?',
+      'unit': '',
+      'reply': '',
+    },
+    {
+      'type': 1,
+      'content': '키가 어떻게 되세요?',
+      'unit': ' cm',
+      'reply': '',
+    },
+    {
+      'type': 1,
+      'content': '몸무게가 어떻게 되세요?',
+      'unit': ' kg',
+      'reply': '',
+    },
+    {
+      'type': 2,
+      'content': '운동을 규칙적으로 한 지\n얼마나 되셨나요?',
+      'options': [
+        '아직 규칙적으로 해보진 않았어요.',
+        '2~3 주',
+        '1~2 개월',
+        '3~5 개월',
+        '6 개월 ~',
+      ],
+      'replyNum': -1,
+    },
+    {
+      'type': 2,
+      'content': '평소에 운동을 얼마나\n규칙적으로 하세요?',
+      'options': [
+        '한 달에 0번',
+        '한 달 1~3회',
+        '주 1~2 회',
+        '주 2~3 회',
+        '주 4 회 이상',
+      ],
+      'replyNum': -1,
+    },
+    {
+      'type': 2,
+      'content': '본인의 운동 실력을\n어떻게 평가하세요?',
+      'options': [
+        '정말 아무것도 몰라요.',
+        '아주 기초적인 지식만 알아요.',
+        '어느정도 알고 있어요.',
+        '잘 알고 있어요.',
+        '전문가 수준으로 잘 알고 있어요.',
+      ],
+      'replyNum': -1,
+    },
+    {
+      'type': 2,
+      'content': '운동 목적이 어떻게 되세요?',
+      'options': [
+        '다이어트',
+        '체중 증량',
+        '바디 프로필',
+        '근력 상승',
+        '아직 모르겠어요.',
+      ],
+      'replyNum': -1,
+    },
+    {
+      'type': 2,
+      'content': '보통 운동을 얼마나 오래 하세요?',
+      'options': [
+        '약 15분',
+        '약 30분',
+        '약 1시간',
+        '약 1시간 30분',
+        '2시간 이상',
+      ],
+      'replyNum': -1,
+    },
+    {
+      'type': 3,
+      'content': '집중적으로 운동하고 싶은\n부위가 어디인가요?',
+      'options': [
+        '등',
+        '어깨',
+        '팔',
+        '가슴',
+        '복근',
+        '엉덩이',
+        '다리',
+        '전신',
+      ],
+      'replyNum': -1,
+    },
+    {
+      'type': 2,
+      'content': '어떤 환경에서 운동할 예정인가요?',
+      'options': [
+        '집 (기구 없음)',
+        '집 (기구 있음)',
+        '헬스장',
+      ],
+      'replyNum': -1,
+    },
+    {
+      'type': 3,
+      'content': '종교적/신체적으로\n먹기 어려운 음식이 있나요?',
+      'options': [
+        "없음",
+        "닭고기",
+        "우유",
+        "메밀",
+        "땅콩",
+        "대두",
+        "밀",
+        "고등어",
+        "게",
+        "새우",
+        "돼지고기",
+        "복숭아",
+        "토마토",
+        "소고기",
+      ],
+      'replyNum': -1,
+    },
+    {
+      'type': 4,
+    }
+  ];
+
+  void validateAge(int input) {
+    if (input < 10 || input > 120) {
+      isRational = false;
+      errorMessage = '나이는 10세에서 120세 사이로 입력해 주세요.';
+    } else {
+      isRational = true;
+      errorMessage = '';
+    }
+  }
+
+  void validateHeight(int input) {
+    if (input < 50 || input > 250) {
+      isRational = false;
+      errorMessage = '키는 50cm에서 250cm 사이로 입력해 주세요.';
+    } else {
+      isRational = true;
+      errorMessage = '';
+    }
+  }
+
+  void validateWeight(int input) {
+    if (input < 10 || input > 300) {
+      isRational = false;
+      errorMessage = '몸무게는 10kg에서 300kg 사이로 입력해 주세요.';
+    } else {
+      isRational = true;
+      errorMessage = '';
+    }
+  }
+
+  void multipleChoiceSelected(int index) {
     setState(() {
-      if (progress < length) {
-        progress++;
+      _selectedIndex = index;
+    });
+  }
+
+  void multipleSelectChoice(int index) {
+    setState(() {
+      if (_selectedMultipleIndices.contains(index)) {
+        _selectedMultipleIndices.remove(index);
+      } else {
+        _selectedMultipleIndices.add(index);
       }
     });
   }
 
+  void nextStep() {
+    if (progress == questions.length - 1) {
+      Navigator.of(context).pushReplacementNamed('/signup');
+    }
+
+    switch (questions[progress]['type']) {
+      case 1:
+        setState(() {
+          questions[progress]['reply'] = _textController.text;
+        });
+        break;
+      case 2:
+        setState(() {
+          questions[progress]['replyNum'] = _selectedIndex;
+        });
+        break;
+      case 3:
+        setState(() {
+          questions[progress]['replyMultiple'] = _selectedMultipleIndices;
+        });
+        break;
+    }
+
+    setState(() {
+      if (progress < questions.length - 1) {
+        progress++;
+        _textController.clear();
+        _selectedIndex = -1;
+        _selectedMultipleIndices.clear();
+      }
+    });
+
+    switch (questions[progress]['type']) {
+      case 1:
+        if (questions[progress]['reply'] != '') {
+          _textController.text = questions[progress]['reply'];
+        }
+        break;
+      case 2:
+        if (questions[progress]['replyNum'] != -1) {
+          _selectedIndex = questions[progress]['replyNum'];
+        }
+        break;
+      case 3:
+        if (questions[progress]['replyMultiple'] != []) {
+          _selectedMultipleIndices = questions[progress]['replyMultiple'];
+        }
+        break;
+    }
+  }
+
+  bool isCkeckComplete() =>
+      (questions[progress]['type'] == 1 && _textController.text == '') ||
+      (questions[progress]['type'] == 2 && _selectedIndex == -1) ||
+      (questions[progress]['type'] == 3 && _selectedMultipleIndices.isEmpty);
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(
-                height: Layout.entireHeight(context) * 0.85,
-                child: getWidgetBasedOnProgress(),
-              ),
-              SizedBox(
-                width: Layout.entireWidth(context) * 0.9,
-                height: Layout.entireHeight(context) * 0.15 - 60.h,
-                child: ElevatedButton(
-                  onPressed: nextStep,
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(100.0),
-                    ),
-                    backgroundColor: KeyColor.primaryBrand300,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (bool didPop, Object? result) async {
+        if (!didPop) {
+          if (progress > 0) {
+            switch (questions[progress - 1]['type']) {
+              case 1:
+                setState(() {
+                  _textController.text = questions[progress - 1]['reply'];
+                });
+                break;
+              case 2:
+                setState(() {
+                  _selectedIndex = questions[progress - 1]['replyNum'];
+                });
+                break;
+              case 3:
+                setState(() {
+                  _selectedMultipleIndices =
+                      questions[progress - 1]['replyMultiple'];
+                });
+                break;
+            }
+            setState(() {
+              progress--;
+            });
+          } else {
+            Navigator.of(context).pop();
+          }
+        }
+      },
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(5.w),
+            child: Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(height: Layout.entireHeight(context) * 0.1),
+                  SizedBox(
+                    height: Layout.entireHeight(context) * 0.1,
+                    child: buildProgressBar(),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          '다음으로',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: KeyColor.grey100,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18.sp,
-                          ),
+                  SizedBox(
+                    height: Layout.entireHeight(context) * 0.65,
+                    child: getWidgetBasedOnProgress(),
+                  ),
+                  SizedBox(height: Layout.entireHeight(context) * 0.03),
+                  SizedBox(
+                    width: Layout.entireWidth(context) * 0.9,
+                    height: Layout.entireHeight(context) * 0.07,
+                    child: ElevatedButton(
+                      onPressed: isCkeckComplete() ? () {} : nextStep,
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(100.0),
                         ),
+                        backgroundColor: isCkeckComplete()
+                            ? KeyColor.primaryDark100
+                            : KeyColor.primaryBrand300,
                       ),
-                      Icon(
-                        Icons.arrow_forward,
-                        color: KeyColor.grey100,
-                        size: 24.sp,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              progress < questions.length - 1 ? '다음으로' : '완료',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: KeyColor.grey100,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18.sp,
+                              ),
+                            ),
+                          ),
+                          Icon(
+                            Icons.arrow_forward,
+                            color: KeyColor.grey100,
+                            size: 24.sp,
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
     );
   }
 
+  Widget buildProgressBar() {
+    return SizedBox(
+      width: Layout.entireWidth(context) * 0.8,
+      child: Column(
+        children: [
+          Text(
+            '${progress + 1} / ${questions.length}',
+            style: TextStyle(
+              color: KeyColor.primaryBrand300,
+              fontSize: 18.sp,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 10.h),
+          LinearProgressIndicator(
+            value: (progress + 1) / questions.length,
+            backgroundColor: Colors.grey.shade300,
+            valueColor: AlwaysStoppedAnimation<Color>(
+              KeyColor.primaryBrand300,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget getWidgetBasedOnProgress() {
-    if (progress == 0) {
-      return const FirstBox();
-    } else if (progress <= 3) {
-      return SurveyStep(
-        progress: progress,
-        length: length,
-        onNext: nextStep,
-      );
-    } else if (progress == 4) {
-      return MultipleChoiceStep(
-        onNext: nextStep,
-        questions: const [
-          '운동을 규칙적으로 한 지 얼마나 되셨나요?',
-          '평소에 운동을 얼마나 규칙적으로 하세요?',
-        ],
-        optionsList: const [
-          [
-            '아직 규칙적으로 해보진 않았어요.',
-            '2~3 주',
-            '1~2 개월',
-            '3~5 개월',
-            '6 개월 ~',
-          ],
-          [
-            '한 달에 0번',
-            '한 달 1~3회',
-            '주 1~2 회',
-            '주 2~3 회',
-            '주 4 회 이상',
-          ],
-        ],
-      );
-    } else {
-      return Container();
+    final question = questions[progress];
+
+    switch (question['type']) {
+      case 0:
+        return FirstBox(
+          buttonText: question['buttonText'],
+        );
+      case 1:
+        return SurveyStep(
+          question: question['content'],
+          unit: question['unit'],
+          controller: _textController,
+        );
+      case 2:
+        return MultipleChoiceStep(
+          question: question['content'],
+          options: question['options'],
+          onSelected: (index) {
+            multipleChoiceSelected(index);
+          },
+          selectedIndex: _selectedIndex,
+        );
+      case 3:
+        return MultipleSelectStep(
+          question: question['content'],
+          options: question['options'],
+          onSelectMultiple: (index) {
+            multipleSelectChoice(index);
+          },
+          selectedIndices: _selectedMultipleIndices,
+        );
+      default:
+        return Container();
     }
-  }
-}
-
-class SurveyStep extends StatelessWidget {
-  final int progress;
-  final int length;
-  final VoidCallback onNext;
-
-  const SurveyStep({
-    Key? key,
-    required this.progress,
-    required this.length,
-    required this.onNext,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    List<String> questions = [
-      '나이가 어떻게 되세요?',
-      '키가 어떻게 되세요?',
-      '몸무게가 어떻게 되세요?',
-    ];
-
-    List<String> units = [
-      '',
-      ' cm',
-      ' kg',
-    ];
-
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SizedBox(
-          width: Layout.entireWidth(context) * 0.75,
-          height: 100.h,
-          child: Column(
-            children: [
-              SizedBox(height: 90.h),
-              LinearProgressIndicator(
-                backgroundColor: KeyColor.primaryBrand300,
-                borderRadius: BorderRadius.circular(10),
-                minHeight: 7,
-                value: progress / length,
-              ),
-            ],
-          ),
-        ),
-        SizedBox(
-          width: Layout.entireWidth(context) * 0.9,
-          height: Layout.entireHeight(context) * 0.85 - 100.h,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              MainText(
-                text: questions[progress - 1],
-              ),
-              SizedBox(height: 20.h),
-              SizedBox(
-                width: Layout.entireWidth(context) * 0.5,
-                child: TextField(
-                  keyboardType: TextInputType.number,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.digitsOnly,
-                  ],
-                  decoration: InputDecoration(
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: KeyColor.grey100,
-                        width: 2.0,
-                      ),
-                    ),
-                    suffixText: units[progress - 1],
-                  ),
-                  style: TextStyle(
-                    fontSize: 24.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class MultipleChoiceStep extends StatefulWidget {
-  final VoidCallback onNext;
-  final List<List<String>> optionsList;
-  final List<String> questions;
-
-  const MultipleChoiceStep({
-    Key? key,
-    required this.onNext,
-    required this.optionsList,
-    required this.questions,
-  }) : super(key: key);
-
-  @override
-  _MultipleChoiceStepState createState() => _MultipleChoiceStepState();
-}
-
-class _MultipleChoiceStepState extends State<MultipleChoiceStep> {
-  int currentQuestionIndex = 0;
-
-  void nextQuestion() {
-    if (currentQuestionIndex < widget.questions.length - 1) {
-      setState(() {
-        currentQuestionIndex++;
-      });
-    } else {
-      widget.onNext();
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    List<String> options = widget.optionsList[currentQuestionIndex];
-
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SizedBox(
-          width: Layout.entireWidth(context) * 0.75,
-          height: 100.h,
-          child: Column(
-            children: [
-              SizedBox(height: 90.h),
-              LinearProgressIndicator(
-                backgroundColor: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                minHeight: 7,
-                value: (currentQuestionIndex + 1) / widget.questions.length,
-              ),
-            ],
-          ),
-        ),
-        SizedBox(
-          width: Layout.entireWidth(context) * 0.9,
-          height: Layout.entireHeight(context) * 0.85 - 100.h,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              MainText(
-                text: widget.questions[currentQuestionIndex],
-              ),
-              SizedBox(height: 20.h),
-              ...options.map((option) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: SizedBox(
-                    height: 50.h,
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: nextQuestion,
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(22.0),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      ),
-                      child: Text(
-                        option,
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              }).toList(),
-            ],
-          ),
-        ),
-      ],
-    );
   }
 }
 
 class FirstBox extends StatelessWidget {
-  const FirstBox({Key? key}) : super(key: key);
+  final String buttonText;
+
+  const FirstBox({
+    Key? key,
+    required this.buttonText,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -309,33 +454,216 @@ class FirstBox extends StatelessWidget {
         ),
         SizedBox(height: 10.h),
         Text(
-          '안녕하세요!',
+          '안녕하세요! 채핏 사용을 환영해요!',
           textAlign: TextAlign.center,
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.sp),
         ),
-        Text(
-          '채핏 사용을 환영해요!',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.sp),
+        SizedBox(height: 20.h),
+        ContentText(text: '목적 달성을 위해'),
+        ContentText(text: '간단한 정보를 수집할게요!'),
+      ],
+    );
+  }
+}
+
+class SurveyStep extends StatelessWidget {
+  final String question;
+  final String unit;
+  final TextEditingController controller;
+
+  const SurveyStep({
+    Key? key,
+    required this.question,
+    required this.unit,
+    required this.controller,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        MainText(
+          text: question,
         ),
-        SizedBox(height: 30.h),
-        ElevatedButton(
-          onPressed: () {
-            // Start the survey
-          },
-          style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(100.0),
-            ),
-            backgroundColor: KeyColor.primaryBrand300,
+        SizedBox(height: 20.h),
+        SizedBox(
+          width: Layout.entireWidth(context) * 0.5,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: controller,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
+                  decoration: InputDecoration(
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: KeyColor.grey100,
+                        width: 2.0,
+                      ),
+                    ),
+                  ),
+                  style: TextStyle(
+                    fontSize: 24.sp,
+                    fontWeight: FontWeight.bold,
+                    color: KeyColor.grey100,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Text(
+                unit,
+                style: TextStyle(
+                  fontSize: 24.sp,
+                  fontWeight: FontWeight.bold,
+                  color: KeyColor.grey100,
+                ),
+              ),
+            ],
           ),
-          child: Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
-            child: Text(
-              '시작하기',
-              style: TextStyle(color: KeyColor.grey100, fontSize: 18.sp),
+        ),
+      ],
+    );
+  }
+}
+
+class MultipleChoiceStep extends StatefulWidget {
+  final String question;
+  final List<String> options;
+  final Function(int) onSelected;
+  final int selectedIndex;
+
+  MultipleChoiceStep({
+    Key? key,
+    required this.question,
+    required this.options,
+    required this.onSelected,
+    required this.selectedIndex,
+  }) : super(key: key);
+
+  @override
+  _MultipleChoiceStepState createState() => _MultipleChoiceStepState();
+}
+
+class _MultipleChoiceStepState extends State<MultipleChoiceStep> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: Layout.entireWidth(context) * 0.85,
+          child: MainText(
+            text: widget.question,
+          ),
+        ),
+        SizedBox(height: 20.h),
+        ...widget.options.asMap().entries.map((entry) {
+          int index = entry.key;
+          String option = entry.value;
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: SizedBox(
+              height: 60.h,
+              width: Layout.entireWidth(context) * 0.85,
+              child: ElevatedButton(
+                onPressed: () {
+                  widget.onSelected(index);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: KeyColor.primaryDark100,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(22.0),
+                  ),
+                  side: (widget.selectedIndex == index)
+                      ? BorderSide(
+                          color: KeyColor.primaryBrand300,
+                          width: 1.5.w,
+                        )
+                      : null,
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                ),
+                child: Text(
+                  option,
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.bold,
+                    color: KeyColor.grey100,
+                  ),
+                ),
+              ),
             ),
+          );
+        }).toList(),
+      ],
+    );
+  }
+}
+
+class MultipleSelectStep extends StatelessWidget {
+  final String question;
+  final List<String> options;
+  final Function(int) onSelectMultiple;
+  final List<int> selectedIndices;
+
+  const MultipleSelectStep({
+    Key? key,
+    required this.question,
+    required this.options,
+    required this.onSelectMultiple,
+    required this.selectedIndices,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: Layout.entireWidth(context) * 0.85,
+          child: MainText(
+            text: question,
+          ),
+        ),
+        SizedBox(height: 20.h),
+        SizedBox(
+          width: Layout.entireWidth(context) * 0.7,
+          child: Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 10.w,
+            runSpacing: 15.w,
+            children: options.asMap().entries.map((entry) {
+              int index = entry.key;
+              String option = entry.value;
+              bool isSelected = selectedIndices.contains(index);
+              return GestureDetector(
+                onTap: () => onSelectMultiple(index),
+                child: Container(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+                  decoration: BoxDecoration(
+                    color: KeyColor.primaryDark100,
+                    borderRadius: BorderRadius.circular(22.0),
+                    border: isSelected
+                        ? Border.all(
+                            color: KeyColor.primaryBrand300, width: 1.5.w)
+                        : null,
+                  ),
+                  child: Text(
+                    option,
+                    style: TextStyle(
+                      color: KeyColor.grey100,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
           ),
         ),
       ],
@@ -358,7 +686,7 @@ class MainText extends StatelessWidget {
       style: TextStyle(
         fontWeight: FontWeight.bold,
         fontSize: 22.sp,
-        color: Colors.black,
+        color: KeyColor.grey100,
       ),
       textAlign: TextAlign.center,
     );

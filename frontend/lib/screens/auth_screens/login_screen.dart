@@ -108,45 +108,59 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const Header(),
-      body: Padding(
-        padding: EdgeInsets.all(Layout.entireWidth(context) * 0.05),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _formField(
-                  label: '이메일',
-                  controller: _emailController,
-                  validator: validateEmail),
-              SizedBox(height: 20.h),
-              _formField(
-                  label: '비밀번호',
-                  controller: _passwordController,
-                  validator: validatePassword,
-                  obscureText: true),
-              SizedBox(height: 20.h),
-              SizedBox(
-                width: Layout.entireWidth(context),
-                height: Layout.bodyHeight(context) * 0.1,
-                child: PrimaryButton(
-                  text: '로그인',
-                  onPressed: login,
+      body: SingleChildScrollView(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            minHeight: MediaQuery.of(context).size.height,
+          ),
+          child: IntrinsicHeight(
+            child: Padding(
+              padding: EdgeInsets.all(Layout.entireWidth(context) * 0.05),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _formField(
+                      label: '이메일',
+                      controller: _emailController,
+                      validator: validateEmail,
+                      icon: Icons.email,
+                    ),
+                    SizedBox(height: 20.h),
+                    _formField(
+                      label: '비밀번호',
+                      controller: _passwordController,
+                      validator: validatePassword,
+                      obscureText: true,
+                      icon: Icons.key,
+                    ),
+                    SizedBox(height: 20.h),
+                    SizedBox(
+                      width: Layout.entireWidth(context),
+                      height: Layout.bodyHeight(context) * 0.1,
+                      child: PrimaryButton(
+                        text: '로그인',
+                        onPressed: login,
+                      ),
+                    ),
+                    SizedBox(height: 20.h),
+                    SizedBox(
+                      width: Layout.entireWidth(context),
+                      height: Layout.bodyHeight(context) * 0.1,
+                      child: SecondButton(
+                        text: '회원가입',
+                        onPressed: () {
+                          Navigator.of(context).pushReplacementNamed('/signup');
+                        },
+                      ),
+                    ),
+                    if (isLoginSuccess) _loginSuccessBox(),
+                  ],
                 ),
               ),
-              SizedBox(height: 20.h),
-              SizedBox(
-                width: Layout.entireWidth(context),
-                height: Layout.bodyHeight(context) * 0.1,
-                child: SecondButton(
-                  text: '회원가입',
-                  onPressed: () {
-                    Navigator.of(context).pushReplacementNamed('/signup');
-                  },
-                ),
-              ),
-              if (isLoginSuccess) _loginSuccessBox(),
-            ],
+            ),
           ),
         ),
       ),
@@ -157,10 +171,12 @@ class _LoginScreenState extends State<LoginScreen> {
       {required String label,
       required TextEditingController controller,
       required String? Function(String?) validator,
+      required IconData icon,
       bool obscureText = false}) {
     return TextFormField(
       controller: controller,
       decoration: InputDecoration(
+        prefixIcon: Icon(icon, color: KeyColor.grey100),
         labelText: label,
         labelStyle: TextStyle(color: KeyColor.grey100),
         border: OutlineInputBorder(
