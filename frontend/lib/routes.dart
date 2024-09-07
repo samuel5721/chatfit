@@ -6,8 +6,9 @@ import 'package:chatfit/screens/diet_screens/diet_screen.dart';
 import 'package:chatfit/screens/diet_screens/past_diet_screen.dart';
 import 'package:chatfit/screens/diet_screens/wirte_diet_screen.dart';
 import 'package:chatfit/screens/exercise_screens/do_exercise_screen.dart';
-import 'package:chatfit/screens/exercise_screens/exercise_scren.dart';
+import 'package:chatfit/screens/exercise_screens/exercise_screen.dart';
 import 'package:chatfit/screens/initial_screens/first_survey_screen.dart';
+import 'package:chatfit/screens/initial_screens/survey_end_screen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:chatfit/screens/calender_screen.dart';
@@ -30,6 +31,7 @@ final routes = {
   '/calender': (BuildContext context) => const CalenderScreen(
         title: 'calender',
       ),
-  '/firstservey': (BuildContext context) => const FirstSurveyScreen(),
+  '/survey': (BuildContext context) => const FirstSurveyScreen(),
+  '/survey_end': (BuildContext context) => const SurveyEndScreen(),
   '/404': (BuildContext context) => const NotFoundScreen(),
 };

@@ -60,7 +60,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
               actions: [
                 TextButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/login');
+                    context
+                        .read<UserProvider>()
+                        .setUserName(_nameController.text);
+                    context
+                        .read<UserProvider>()
+                        .setUserEmail(_emailController.text);
+                    Navigator.pushNamed(context, '/survey');
                   },
                   child: const Text('확인'),
                 ),

@@ -76,7 +76,7 @@ class _UserScreenState extends State<UserScreen> {
               SizedBox(height: 20.h),
               PrimaryButton(
                 onPressed: () {
-                  // 초기 설문조사 다시하기 기능 추가
+                  Navigator.pushNamed(context, '/survey');
                 },
                 text: '초기 설문조사 다시하기',
               ),

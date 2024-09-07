@@ -1,8 +1,12 @@
 import 'package:chatfit/components/texts.dart';
+import 'package:chatfit/providers/user_provider.dart';
+import 'package:chatfit/screens/exercise_screens/exercise_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:chatfit/theme.dart';
+import 'package:provider/provider.dart';
 
 class FirstSurveyScreen extends StatefulWidget {
   const FirstSurveyScreen({Key? key}) : super(key: key);
@@ -17,9 +21,6 @@ class _FirstSurveyScreenState extends State<FirstSurveyScreen> {
   TextEditingController _textController = TextEditingController();
   int _selectedIndex = -1;
   List<int> _selectedMultipleIndices = [];
-
-  bool isRational = true;
-  String errorMessage = '';
 
   List<String> avoidFoodList = [
     "닭고기",
@@ -45,24 +46,28 @@ class _FirstSurveyScreenState extends State<FirstSurveyScreen> {
     {
       'type': 1,
       'content': '나이가 어떻게 되세요?',
+      'name': 'age',
       'unit': '',
       'reply': '',
     },
     {
       'type': 1,
       'content': '키가 어떻게 되세요?',
+      'name': 'height',
       'unit': ' cm',
       'reply': '',
     },
     {
       'type': 1,
       'content': '몸무게가 어떻게 되세요?',
+      'name': 'weight',
       'unit': ' kg',
       'reply': '',
     },
     {
       'type': 2,
       'content': '운동을 규칙적으로 한 지\n얼마나 되셨나요?',
+      'name': 'exercise_period',
       'options': [
         '아직 규칙적으로 해보진 않았어요.',
         '2~3 주',
@@ -75,6 +80,7 @@ class _FirstSurveyScreenState extends State<FirstSurveyScreen> {
     {
       'type': 2,
       'content': '평소에 운동을 얼마나\n규칙적으로 하세요?',
+      'name': 'exercise_frequency',
       'options': [
         '한 달에 0번',
         '한 달 1~3회',
@@ -87,6 +93,7 @@ class _FirstSurveyScreenState extends State<FirstSurveyScreen> {
     {
       'type': 2,
       'content': '본인의 운동 실력을\n어떻게 평가하세요?',
+      'name': 'exercise_level',
       'options': [
         '정말 아무것도 몰라요.',
         '아주 기초적인 지식만 알아요.',
@@ -99,6 +106,7 @@ class _FirstSurveyScreenState extends State<FirstSurveyScreen> {
     {
       'type': 2,
       'content': '운동 목적이 어떻게 되세요?',
+      'name': 'exercise_purpose',
       'options': [
         '다이어트',
         '체중 증량',
@@ -111,6 +119,7 @@ class _FirstSurveyScreenState extends State<FirstSurveyScreen> {
     {
       'type': 2,
       'content': '보통 운동을 얼마나 오래 하세요?',
+      'name': 'exercise_duration',
       'options': [
         '약 15분',
         '약 30분',
@@ -123,6 +132,7 @@ class _FirstSurveyScreenState extends State<FirstSurveyScreen> {
     {
       'type': 3,
       'content': '집중적으로 운동하고 싶은\n부위가 어디인가요?',
+      'name': 'exercise_focus',
       'options': [
         '등',
         '어깨',
@@ -133,11 +143,12 @@ class _FirstSurveyScreenState extends State<FirstSurveyScreen> {
         '다리',
         '전신',
       ],
-      'replyNum': -1,
+      'replyNum': [],
     },
     {
       'type': 2,
       'content': '어떤 환경에서 운동할 예정인가요?',
+      'name': 'exercise_environment',
       'options': [
         '집 (기구 없음)',
         '집 (기구 있음)',
@@ -148,6 +159,7 @@ class _FirstSurveyScreenState extends State<FirstSurveyScreen> {
     {
       'type': 3,
       'content': '종교적/신체적으로\n먹기 어려운 음식이 있나요?',
+      'name': 'avoid_food',
       'options': [
         "없음",
         "닭고기",
@@ -164,12 +176,61 @@ class _FirstSurveyScreenState extends State<FirstSurveyScreen> {
         "토마토",
         "소고기",
       ],
-      'replyNum': -1,
+      'replyNum': [],
     },
-    {
-      'type': 4,
-    }
   ];
+  Future<void> updateFirestoreWithSurvey() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    DocumentReference documentReference = firestore
+        .collection(context.read<UserProvider>().userEmail)
+        .doc('private-info');
+
+    Map<String, dynamic> surveyData = {};
+
+    for (var question in questions) {
+      // 'name' 필드가 null인 경우를 대비해 기본값 설정
+      String fieldName = question['name'] ?? 'unknown_field';
+
+      var reply;
+
+      // type이 1이면 숫자 저장
+      if (question['type'] == 1) {
+        reply = int.tryParse(question['reply'] ?? '0') ?? 0; // 숫자로 변환, 기본값 0
+      }
+      // type이 2면 단일 선택 값 저장
+      else if (question['type'] == 2 && question.containsKey('replyNum')) {
+        reply = (question['options'] != null &&
+                question['replyNum'] != -1 &&
+                question['replyNum'] <
+                    question['options'].length) // 유효한 인덱스인지 확인
+            ? question['options'][question['replyNum']]
+            : 'unknown';
+      }
+      // type이 3이면 배열 저장
+      else if (question['type'] == 3 && question.containsKey('replyMultiple')) {
+        reply = (question['replyMultiple'] != null)
+            ? question['replyMultiple']
+                .where((index) =>
+                    index >= 0 &&
+                    index < question['options'].length) // 인덱스가 유효한지 확인
+                .map((index) => question['options'][index])
+                .toList()
+            : [];
+      }
+
+      if (reply != null) {
+        surveyData[fieldName] = reply;
+      }
+    }
+
+    try {
+      await documentReference.update(surveyData); // Firestore에 비동기로 데이터 업데이트
+      print("Survey data updated successfully");
+    } catch (error) {
+      print("Failed to update survey data: $error");
+    }
+  }
 
   void multipleChoiceSelected(int index) {
     setState(() {
@@ -187,11 +248,7 @@ class _FirstSurveyScreenState extends State<FirstSurveyScreen> {
     });
   }
 
-  void nextStep() {
-    if (progress == questions.length - 1) {
-      Navigator.of(context).pushReplacementNamed('/signup');
-    }
-
+  void nextStep() async {
     switch (questions[progress]['type']) {
       case 1:
         setState(() {
@@ -235,6 +292,11 @@ class _FirstSurveyScreenState extends State<FirstSurveyScreen> {
           _selectedMultipleIndices = questions[progress]['replyMultiple'];
         }
         break;
+    }
+
+    if (progress == questions.length - 1) {
+      await updateFirestoreWithSurvey();
+      Navigator.pushNamed(context, '/survey_end');
     }
   }
 
@@ -371,9 +433,7 @@ class _FirstSurveyScreenState extends State<FirstSurveyScreen> {
 
     switch (question['type']) {
       case 0:
-        return FirstBox(
-          buttonText: question['buttonText'],
-        );
+        return FirstBox();
       case 1:
         return SurveyStep(
           question: question['content'],
@@ -405,11 +465,8 @@ class _FirstSurveyScreenState extends State<FirstSurveyScreen> {
 }
 
 class FirstBox extends StatelessWidget {
-  final String buttonText;
-
   const FirstBox({
     Key? key,
-    required this.buttonText,
   }) : super(key: key);
 
   @override
