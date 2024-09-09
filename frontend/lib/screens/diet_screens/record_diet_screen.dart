@@ -4,8 +4,8 @@ import 'package:chatfit/components/buttons.dart';
 import 'package:chatfit/components/header.dart';
 import 'package:chatfit/components/navigations.dart';
 import 'package:chatfit/components/texts.dart';
+import 'package:chatfit/module/loadLogin.dart';
 import 'package:chatfit/theme.dart';
-import 'package:chatfit/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -59,8 +59,7 @@ class _CameraScreenState extends State<CameraScreen> {
     });
 
     try {
-      String? userEmail =
-          Provider.of<UserProvider>(context, listen: false).getUserEmail();
+      String? userEmail = await getUserEmail(context);
 
       if (userEmail.isEmpty) {
         throw Exception("User email is not available.");
@@ -150,8 +149,7 @@ class _CameraScreenState extends State<CameraScreen> {
   void _removeImage() async {
     if (_imageId != '') {
       try {
-        String userEmail =
-            Provider.of<UserProvider>(context, listen: false).getUserEmail();
+        String userEmail = await getUserEmail(context);
 
         final storageRef = FirebaseStorage.instance.ref();
         await storageRef.child('/uploads/$userEmail/$_imageId').delete();

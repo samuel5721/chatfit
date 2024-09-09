@@ -1,4 +1,4 @@
-import 'package:chatfit/providers/user_provider.dart';
+import 'package:chatfit/module/loadLogin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/classes/event_list.dart';
@@ -53,8 +53,7 @@ class _PastDietScreenState extends State<PastDietScreen> {
   };
 
   Future<void> _loadDietData(DateTime date) async {
-    String userEmail =
-        Provider.of<UserProvider>(context, listen: false).getUserEmail();
+    String userEmail = await getUserEmail(context);
     final userDoc =
         FirebaseFirestore.instance.collection(userEmail).doc('diets');
     final dateKey =

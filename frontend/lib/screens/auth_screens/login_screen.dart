@@ -1,13 +1,14 @@
 import 'package:chatfit/components/buttons.dart';
 import 'package:chatfit/components/header.dart';
 import 'package:chatfit/components/texts.dart';
-import 'package:chatfit/providers/user_provider.dart';
+import 'package:chatfit/module/loadLogin.dart';
 import 'package:chatfit/theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -24,7 +25,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool isLoginSuccess = false;
-
   Future<void> login() async {
     if (_formKey.currentState!.validate()) {
       try {
@@ -37,15 +37,11 @@ class _LoginScreenState extends State<LoginScreen> {
           setState(() {
             isLoginSuccess = true;
           });
-          context.read<UserProvider>().setIsLogin(true);
 
-          final userDoc = FirebaseFirestore.instance
-              .collection(_emailController.text)
-              .doc('private-info');
-          final docSnapshot = await userDoc.get();
+          setUserEmail(context, _emailController.text);
+          await loadLoginStatus(context);
 
-          context.read<UserProvider>().setUserName(docSnapshot['name']);
-          context.read<UserProvider>().setUserEmail(_emailController.text);
+          // 로그인 후 메인 페이지로 이동
           Navigator.pushNamed(context, '/');
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -122,6 +118,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TitleText(text: 'Welcome to Chatfit!'),
+                      ],
+                    ),
+                    SizedBox(height: 50.h),
                     _formField(
                       label: '이메일',
                       controller: _emailController,

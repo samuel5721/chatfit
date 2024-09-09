@@ -1,3 +1,4 @@
+import 'package:chatfit/module/loadLogin.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,7 +11,6 @@ import 'package:chatfit/components/navigation_bar.dart';
 import 'package:chatfit/components/navigations.dart';
 import 'package:chatfit/components/texts.dart';
 import 'package:chatfit/theme.dart';
-import 'package:chatfit/providers/user_provider.dart';
 
 class DietRecordScreen extends StatefulWidget {
   const DietRecordScreen({super.key});
@@ -27,8 +27,7 @@ class _DietRecordScreenState extends State<DietRecordScreen> {
   String imageUrl = '';
 
   Future<void> _loadDietData() async {
-    String userEmail =
-        Provider.of<UserProvider>(context, listen: false).getUserEmail();
+    String userEmail = await getUserEmail(context);
     final userDoc =
         FirebaseFirestore.instance.collection(userEmail).doc('diets');
 
@@ -97,9 +96,7 @@ class _DietRecordScreenState extends State<DietRecordScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ContentText(
-              text:
-                  '${context.read<UserProvider>().userName} 님은 1300 kcal 를 섭취했어요!'),
+          ContentText(text: '${getUserName(context)} 님은 1300 kcal 를 섭취했어요!'),
           const ContentText(text: '목표 칼로리까지 325 kcal 남았어요!'),
         ],
       ),

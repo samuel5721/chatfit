@@ -1,5 +1,5 @@
 import 'package:chatfit/components/texts.dart';
-import 'package:chatfit/providers/user_provider.dart';
+import 'package:chatfit/module/loadLogin.dart';
 import 'package:chatfit/screens/exercise_screens/exercise_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -182,9 +182,8 @@ class _FirstSurveyScreenState extends State<FirstSurveyScreen> {
   Future<void> updateFirestoreWithSurvey() async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-    DocumentReference documentReference = firestore
-        .collection(context.read<UserProvider>().userEmail)
-        .doc('private-info');
+    DocumentReference documentReference =
+        firestore.collection(await getUserEmail(context)).doc('private-info');
 
     Map<String, dynamic> surveyData = {};
 

@@ -1,13 +1,14 @@
 import 'package:chatfit/components/buttons.dart';
 import 'package:chatfit/components/header.dart';
 import 'package:chatfit/components/texts.dart';
-import 'package:chatfit/providers/user_provider.dart';
+import 'package:chatfit/module/loadLogin.dart';
 import 'package:chatfit/theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -29,7 +30,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   bool isLoading = false;
 
-  void signUp() {
+  void signUp() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
         isLoading = true;
@@ -50,6 +51,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
           'singup_date': DateTime.now(),
         });
 
+        setUserEmail(context, _emailController.text);
+        await loadLoginStatus(context);
+
         showDialog(
           context: context,
           builder: (context) {
@@ -59,13 +63,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
               content: const Text('회원가입이 성공적으로 완료되었습니다.'),
               actions: [
                 TextButton(
-                  onPressed: () {
-                    context
-                        .read<UserProvider>()
-                        .setUserName(_nameController.text);
-                    context
-                        .read<UserProvider>()
-                        .setUserEmail(_emailController.text);
+                  onPressed: () async {
+                    setUserEmail(context, _emailController.text);
+                    await loadLoginStatus(context);
                     Navigator.pushNamed(context, '/survey');
                   },
                   child: const Text('확인'),

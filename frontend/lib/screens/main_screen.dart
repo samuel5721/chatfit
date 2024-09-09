@@ -1,6 +1,6 @@
 import 'package:chatfit/components/buttons.dart';
 import 'package:chatfit/components/texts.dart';
-import 'package:chatfit/providers/user_provider.dart';
+import 'package:chatfit/module/loadLogin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -16,10 +16,12 @@ class MainScreen extends StatelessWidget {
 
   final bool isHidden = true; // 홈 화면이 필요하다면 이 값을 false로 변경
 
+  Future<String> _getUserName(BuildContext context) async {
+    return await getUserName(context);
+  }
+
   @override
   Widget build(BuildContext context) {
-    String userName = context.read<UserProvider>().getUserName();
-
     return Scaffold(
       backgroundColor: KeyColor.primaryDark300,
       appBar: const Header(),
@@ -42,14 +44,31 @@ class MainScreen extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      WidgetCard(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ContentText(text: '$userName 님은 3일 연속 출석하고 있어요!'),
-                            const ContentText(text: '다른 회원 대비 상위 10% 예요!'),
-                          ],
-                        ),
+                      FutureBuilder<String>(
+                        future: _getUserName(context),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator(); // 로딩 중일 때
+                          } else if (snapshot.hasError) {
+                            return const Text('이름을 불러오는 중 오류가 발생했습니다.');
+                          } else if (snapshot.hasData) {
+                            return WidgetCard(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ContentText(
+                                      text:
+                                          '${snapshot.data!} 님은 3일 연속 출석하고 있어요!'),
+                                  const ContentText(
+                                      text: '다른 회원 대비 상위 10% 예요!'),
+                                ],
+                              ),
+                            );
+                          } else {
+                            return const Text('사용자 이름을 불러올 수 없습니다.');
+                          }
+                        },
                       ),
                       SizedBox(height: 20.h),
                       WidgetCard(

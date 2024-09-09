@@ -1,10 +1,11 @@
 import 'package:chatfit/components/buttons.dart';
 import 'package:chatfit/components/header.dart';
-import 'package:chatfit/providers/user_provider.dart';
+import 'package:chatfit/module/loadLogin.dart';
 import 'package:chatfit/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserScreen extends StatefulWidget {
   const UserScreen({super.key});
@@ -14,7 +15,11 @@ class UserScreen extends StatefulWidget {
 }
 
 class _UserScreenState extends State<UserScreen> {
-  void _logout() {
+  Future<String> _getUserName() async {
+    return await getUserName(context);
+  }
+
+  void _logout() async {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -24,12 +29,10 @@ class _UserScreenState extends State<UserScreen> {
           backgroundColor: KeyColor.primaryDark300,
           actions: [
             TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // 다이얼로그 닫기
-                // 로그아웃 처리
-                context.read<UserProvider>().setIsLogin(false);
-                context.read<UserProvider>().setUserName('');
-                context.read<UserProvider>().setUserEmail('');
+              onPressed: () async {
+                Navigator.of(context).pop();
+
+                removeUserData(context);
 
                 Navigator.pushNamed(context, '/');
               },
@@ -59,13 +62,26 @@ class _UserScreenState extends State<UserScreen> {
               ),
               SizedBox(height: 10.h),
 
-              // 사용자 이름
-              Text(
-                context.read<UserProvider>().getUserName(),
-                style: TextStyle(
-                  fontSize: 24.sp,
-                  fontWeight: FontWeight.bold,
-                ),
+              // 사용자 이름을 가져오는 비동기 작업
+              FutureBuilder<String>(
+                future: _getUserName(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator(); // 데이터를 불러오는 동안 로딩 표시
+                  } else if (snapshot.hasError) {
+                    return Text('오류가 발생했습니다.');
+                  } else if (snapshot.hasData) {
+                    return Text(
+                      snapshot.data!,
+                      style: TextStyle(
+                        fontSize: 24.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    );
+                  } else {
+                    return Text('이름을 불러올 수 없습니다.');
+                  }
+                },
               ),
               SizedBox(height: 60.h),
 

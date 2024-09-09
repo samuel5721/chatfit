@@ -1,5 +1,5 @@
 import 'package:chatfit/components/texts.dart';
-import 'package:chatfit/providers/user_provider.dart';
+import 'package:chatfit/module/loadLogin.dart';
 import 'package:chatfit/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -43,7 +43,7 @@ class DietNavigation extends StatelessWidget {
   Widget build(BuildContext context) {
     return Navigation(
       child: TitleText(
-        text: '${context.read<UserProvider>().userName} 님의 식단 기록이예요',
+        text: '${getUserName(context)} 님의 식단 기록이예요',
         fontSize: 20,
       ),
     );

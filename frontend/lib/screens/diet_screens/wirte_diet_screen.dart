@@ -1,8 +1,8 @@
 import 'package:chatfit/components/buttons.dart';
 import 'package:chatfit/components/header.dart';
 import 'package:chatfit/components/texts.dart';
+import 'package:chatfit/module/loadLogin.dart';
 import 'package:chatfit/theme.dart';
-import 'package:chatfit/providers/user_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -47,8 +47,7 @@ class _WriteDietScreenState extends State<WriteDietScreen> {
     });
 
     try {
-      String userEmail =
-          Provider.of<UserProvider>(context, listen: false).getUserEmail();
+      String userEmail = await getUserEmail(context);
       String fieldName = imageId.substring(2, 8) + time;
 
       FirebaseFirestore firestore = FirebaseFirestore.instance;

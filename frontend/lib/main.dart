@@ -1,6 +1,7 @@
+import 'package:chatfit/module/loadLogin.dart';
 import 'package:chatfit/providers/locate_provider.dart';
 import 'package:chatfit/theme.dart';
-import 'package:chatfit/providers/user_provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/material.dart';
 import 'package:chatfit/routes.dart';
@@ -8,11 +9,17 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
+  // 로그인 기록 확인
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // 환경변수
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
-  
+
+  // Firebase 초기화
   await Firebase.initializeApp();
   await FirebaseAppCheck.instance.activate(
     webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
@@ -20,7 +27,9 @@ Future<void> main() async {
     appleProvider: AppleProvider.appAttest,
   );
 
-  runApp(const MyApp());
+  runApp(
+    const MyApp(),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -32,37 +41,46 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       designSize: const Size(390, 784),
       child: MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => LocateProvider()),
-          ChangeNotifierProvider(create: (_) => UserProvider()),
         ],
-        child: MaterialApp(
-          title: 'Flutter Demo',
-          theme: ThemeData(
-            primaryColor: KeyColor.primaryDark300,
-            scaffoldBackgroundColor: KeyColor.primaryDark300,
-            colorScheme: ColorScheme.fromSwatch().copyWith(
-              primary: KeyColor.primaryBrand300,
-              secondary: Colors.white,
-            ),
-            textTheme: Typography.blackMountainView.apply(
-              bodyColor: KeyColor.grey100,
-              displayColor: KeyColor.grey100,
-              fontFamily: 'SUIT',
-            ),
-          ),
-          builder: (context, child) {
-            return MediaQuery(
-              data: MediaQuery.of(context)
-                  .copyWith(textScaler: const TextScaler.linear(1.0)),
-              child: child!,
+        child: FutureBuilder<SharedPreferences>(
+          future: SharedPreferences.getInstance(),
+          builder: (context, snapshot) {
+            return MaterialApp(
+              title: 'Flutter Demo',
+              theme: ThemeData(
+                primaryColor: KeyColor.primaryDark300,
+                scaffoldBackgroundColor: KeyColor.primaryDark300,
+                colorScheme: ColorScheme.fromSwatch().copyWith(
+                  primary: KeyColor.primaryBrand300,
+                  secondary: Colors.white,
+                ),
+                textTheme: Typography.blackMountainView.apply(
+                  bodyColor: KeyColor.grey100,
+                  displayColor: KeyColor.grey100,
+                  fontFamily: 'SUIT',
+                ),
+              ),
+              builder: (context, child) {
+                return MediaQuery(
+                  data: MediaQuery.of(context)
+                      .copyWith(textScaler: const TextScaler.linear(1.0)),
+                  child: child!,
+                );
+              },
+              routes: routes,
             );
           },
-          routes: routes,
         ),
       ),
     );

@@ -1,4 +1,4 @@
-import 'package:chatfit/providers/user_provider.dart';
+import 'package:chatfit/module/loadLogin.dart';
 import 'package:chatfit/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -15,8 +15,8 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            onPressed: () {
-              if (context.read<UserProvider>().isLogin) {
+            onPressed: () async {
+              if (await getIsLogin(context)) {
                 if (ModalRoute.of(context)?.settings.name != 'user') {
                   Navigator.pushNamed(context, '/user');
                 }
