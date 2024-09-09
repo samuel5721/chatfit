@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 
 class LocateProvider with ChangeNotifier {
-  int location = 2;
+  int _location = 2;
 
-  int getLocation() {
-    return location;
-  }
+  int getLocation() => _location;
 
   void setLocation(int newLocation) {
-    location = newLocation;
+    _location = newLocation;
     notifyListeners();
   }
 }
