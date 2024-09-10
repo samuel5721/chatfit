@@ -16,18 +16,12 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
         actions: [
           IconButton(
             onPressed: () async {
-              if (ModalRoute.of(context)?.settings.name != 'user') {
-                Navigator.pushNamed(context, '/user');
-              }
-              if (ModalRoute.of(context)?.settings.name != 'login') {
-                Navigator.pushNamed(context, '/login');
-              }
               if (await getIsLogin(context)) {
-                if (ModalRoute.of(context)?.settings.name != 'user') {
+                if (ModalRoute.of(context)?.settings.name != '/user') {
                   Navigator.pushNamed(context, '/user');
                 }
               } else {
-                if (ModalRoute.of(context)?.settings.name != 'login') {
+                if (ModalRoute.of(context)?.settings.name != '/login') {
                   Navigator.pushNamed(context, '/login');
                 }
               }

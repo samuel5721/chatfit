@@ -34,7 +34,11 @@ class _UserScreenState extends State<UserScreen> {
 
                 removeUserData(context);
 
-                Navigator.pushNamed(context, '/');
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  '/login',
+                  (Route<dynamic> route) => false,
+                );
               },
               child: const Text('확인'),
             ),
