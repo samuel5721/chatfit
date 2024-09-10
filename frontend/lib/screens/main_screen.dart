@@ -1,6 +1,6 @@
 import 'package:chatfit/components/buttons.dart';
 import 'package:chatfit/components/texts.dart';
-import 'package:chatfit/module/loadLogin.dart';
+import 'package:chatfit/module/load_login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -11,13 +11,24 @@ import 'package:chatfit/components/card.dart';
 import 'package:chatfit/providers/locate_provider.dart';
 import 'package:chatfit/theme.dart';
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
-  final bool isHidden = true; // 홈 화면이 필요하다면 이 값을 false로 변경
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
 
+class _MainScreenState extends State<MainScreen> {
+  final bool isHidden = true;
+  // 홈 화면이 필요하다면 이 값을 false로 변경
   Future<String> _getUserName(BuildContext context) async {
     return await getUserName(context);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<LocateProvider>().setLocation(2);
   }
 
   @override

@@ -1,4 +1,5 @@
-import 'package:chatfit/module/loadLogin.dart';
+import 'package:chatfit/module/load_login.dart';
+import 'package:chatfit/providers/chat_provider.dart';
 import 'package:chatfit/providers/locate_provider.dart';
 import 'package:chatfit/theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -52,6 +53,7 @@ class _MyAppState extends State<MyApp> {
       child: MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => LocateProvider()),
+          ChangeNotifierProvider(create: (_) => ChatProvider()),
         ],
         child: FutureBuilder<SharedPreferences>(
           future: SharedPreferences.getInstance(),

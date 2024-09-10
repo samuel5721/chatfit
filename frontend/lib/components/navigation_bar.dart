@@ -63,7 +63,7 @@ class _MainNavigationBarState extends State<MainNavigationBar> {
           BottomNavigationBarItem(
               icon: Icon(Icons.line_axis, size: 35.w), label: 'statics'),
         ],
-        currentIndex: Provider.of<LocateProvider>(context).getLocation(),
+        currentIndex: context.read<LocateProvider>().getLocation(),
         type: BottomNavigationBarType.fixed,
         showSelectedLabels: false,
         showUnselectedLabels: false,

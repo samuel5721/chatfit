@@ -1,7 +1,7 @@
 import 'package:chatfit/components/buttons.dart';
 import 'package:chatfit/components/header.dart';
 import 'package:chatfit/components/texts.dart';
-import 'package:chatfit/module/loadLogin.dart';
+import 'package:chatfit/module/load_login.dart';
 import 'package:chatfit/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

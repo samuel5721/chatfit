@@ -1,4 +1,5 @@
-import 'package:chatfit/module/loadLogin.dart';
+import 'package:chatfit/module/load_login.dart';
+import 'package:chatfit/providers/locate_provider.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -63,6 +64,7 @@ class _DietRecordScreenState extends State<DietRecordScreen> {
   void initState() {
     super.initState();
     _loadDietData();
+    context.read<LocateProvider>().setLocation(0);
   }
 
   @override

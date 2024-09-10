@@ -18,6 +18,12 @@ class ExerciseScreen extends StatefulWidget {
 
 class _ExerciseScreenState extends State<ExerciseScreen> {
   @override
+  void initState() {
+    super.initState();
+    context.read<LocateProvider>().setLocation(1);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const Header(),

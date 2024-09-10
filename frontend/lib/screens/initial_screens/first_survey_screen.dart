@@ -1,5 +1,5 @@
 import 'package:chatfit/components/texts.dart';
-import 'package:chatfit/module/loadLogin.dart';
+import 'package:chatfit/module/load_login.dart';
 import 'package:chatfit/screens/exercise_screens/exercise_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';

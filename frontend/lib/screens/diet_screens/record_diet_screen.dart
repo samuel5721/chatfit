@@ -4,7 +4,7 @@ import 'package:chatfit/components/buttons.dart';
 import 'package:chatfit/components/header.dart';
 import 'package:chatfit/components/navigations.dart';
 import 'package:chatfit/components/texts.dart';
-import 'package:chatfit/module/loadLogin.dart';
+import 'package:chatfit/module/load_login.dart';
 import 'package:chatfit/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -107,7 +107,7 @@ class _CameraScreenState extends State<CameraScreen> {
       // 이미지를 Multipart로 변환
       var request = http.MultipartRequest(
         'POST',
-        Uri.parse('http://127.0.0.1:8000/api/detect_cnn'), // 백엔드 엔드포인트
+        Uri.parse('http://3.38.71.7:8000/api/detect_cnn'), // 백엔드 엔드포인트
       );
 
       request.files.add(await http.MultipartFile.fromPath(
