@@ -32,6 +32,7 @@ class _PastDietScreenState extends State<PastDietScreen> {
   @override
   void initState() {
     super.initState();
+
     initializeDateFormatting('ko', null);
     _currentMonth = DateFormat.yMMM('ko').format(_targetDateTime);
     _loadDietData(_currentDate);

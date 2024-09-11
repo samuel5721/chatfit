@@ -42,6 +42,11 @@ class _LoginScreenState extends State<LoginScreen> {
           await loadLoginStatus(context);
 
           // 로그인 후 메인 페이지로 이동
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            '/login',
+            (Route<dynamic> route) => false,
+          );
           Navigator.pushNamed(context, '/');
         } else {
           ScaffoldMessenger.of(context).showSnackBar(

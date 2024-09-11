@@ -16,6 +16,9 @@ import 'package:chatfit/components/navigation_bar.dart';
 import 'package:chatfit/theme.dart';
 import 'package:chatfit/providers/chat_provider.dart';
 
+// ! 생애 가장 거대하고, 가장 많은 노력이 많이 든 시발놈
+// ! 비동기처리는 또 뭐야 시 발 련
+
 class ChatBoTScreen extends StatefulWidget {
   const ChatBoTScreen({super.key});
 

@@ -56,34 +56,40 @@ class _MyAppState extends State<MyApp> {
           ChangeNotifierProvider(create: (_) => ChatProvider()),
         ],
         child: FutureBuilder<SharedPreferences>(
-          future: SharedPreferences.getInstance(),
-          builder: (context, snapshot) {
-            return MaterialApp(
-              title: 'Flutter Demo',
-              theme: ThemeData(
-                primaryColor: KeyColor.primaryDark300,
-                scaffoldBackgroundColor: KeyColor.primaryDark300,
-                colorScheme: ColorScheme.fromSwatch().copyWith(
-                  primary: KeyColor.primaryBrand300,
-                  secondary: Colors.white,
+            future: SharedPreferences.getInstance(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator(); // 로딩 중일 때 표시할 위젯
+              } else if (snapshot.hasError) {
+                return const Text("Error loading preferences"); // 에러 처리
+              }
+
+              // 성공적으로 SharedPreferences를 불러온 경우
+              return MaterialApp(
+                title: 'Flutter Demo',
+                theme: ThemeData(
+                  primaryColor: KeyColor.primaryDark300,
+                  scaffoldBackgroundColor: KeyColor.primaryDark300,
+                  colorScheme: ColorScheme.fromSwatch().copyWith(
+                    primary: KeyColor.primaryBrand300,
+                    secondary: Colors.white,
+                  ),
+                  textTheme: Typography.blackMountainView.apply(
+                    bodyColor: KeyColor.grey100,
+                    displayColor: KeyColor.grey100,
+                    fontFamily: 'SUIT',
+                  ),
                 ),
-                textTheme: Typography.blackMountainView.apply(
-                  bodyColor: KeyColor.grey100,
-                  displayColor: KeyColor.grey100,
-                  fontFamily: 'SUIT',
-                ),
-              ),
-              builder: (context, child) {
-                return MediaQuery(
-                  data: MediaQuery.of(context)
-                      .copyWith(textScaler: const TextScaler.linear(1.0)),
-                  child: child!,
-                );
-              },
-              routes: routes,
-            );
-          },
-        ),
+                builder: (context, child) {
+                  return MediaQuery(
+                    data: MediaQuery.of(context)
+                        .copyWith(textScaler: const TextScaler.linear(1.0)),
+                    child: child!,
+                  );
+                },
+                routes: routes,
+              );
+            }),
       ),
     );
   }

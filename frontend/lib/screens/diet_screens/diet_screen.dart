@@ -63,8 +63,7 @@ class _DietRecordScreenState extends State<DietRecordScreen> {
   @override
   void initState() {
     super.initState();
-    _loadDietData();
-    context.read<LocateProvider>().setLocation(0);
+    _loadDietData(); // ! 시 발 련
   }
 
   @override

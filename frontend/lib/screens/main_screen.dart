@@ -25,10 +25,13 @@ class _MainScreenState extends State<MainScreen> {
     return await getUserName(context);
   }
 
+  Future<bool> _getIsLogin(BuildContext context) async {
+    return await getIsLogin(context);
+  }
+
   @override
   void initState() {
     super.initState();
-    context.read<LocateProvider>().setLocation(2);
   }
 
   @override
@@ -37,19 +40,16 @@ class _MainScreenState extends State<MainScreen> {
       backgroundColor: KeyColor.primaryDark300,
       appBar: const Header(),
       body: Center(
-        child: (!isHidden)
-            ? const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                      '디버깅 페이지입니다. 만약 홈 화면이 필요하다면 코드에서 isHidden을 false로 변경하세요.'),
-                  LocateButton(location: 'camera'),
-                  LocateButton(location: 'chatbox'),
-                  LocateButton(location: 'calender'),
-                  LocateButton(location: 'firstsurvey'),
-                ],
-              )
-            : SingleChildScrollView(
+        child: FutureBuilder<bool>(
+          future: _getIsLogin(context),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator(); // 로딩 중일 때
+            } else if (snapshot.hasError) {
+              return const Text('로그인 상태를 확인하는 중 오류가 발생했습니다.');
+            } else if (snapshot.hasData && snapshot.data == true) {
+              // 로그인 상태가 true일 경우 원래 UI 표시
+              return SingleChildScrollView(
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
                   child: Column(
@@ -66,13 +66,11 @@ class _MainScreenState extends State<MainScreen> {
                           } else if (snapshot.hasData) {
                             return WidgetCard(
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   ContentText(
                                       text:
-                                          '${snapshot.data!} 님은 3일 연속 출석하고 있어요!'),
-                                  const ContentText(
-                                      text: '다른 회원 대비 상위 10% 예요!'),
+                                          '${snapshot.data!} 님, 반가워요!\n오늘도 화이팅하세요!'),
                                 ],
                               ),
                             );
@@ -83,47 +81,8 @@ class _MainScreenState extends State<MainScreen> {
                       ),
                       SizedBox(height: 20.h),
                       WidgetCard(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const TitleText(text: 'Day 3'),
-                            SizedBox(height: 5.h),
-                            const TitleText(text: '등 💪'),
-                            SizedBox(height: 15.h),
-                            const ContentText(
-                                text: '1. 사이드 레터럴 레이즈 3kg 12회 3세트',
-                                fontSize: 16),
-                            const ContentText(
-                                text: '2. 프론트 레터럴 레이즈 3kg 12회 3세트',
-                                fontSize: 16),
-                            const ContentText(
-                                text: '3. 렛풀다운 3kg 12회 3세트', fontSize: 16),
-                            const ContentText(
-                                text: '4. 푸시업 10회 3세트', fontSize: 16),
-                            const ContentText(
-                                text: '5. 런닝머신 30분', fontSize: 16),
-                            SizedBox(height: 15.h),
-                            const Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                TitleText(text: '🔥 104 Kcal'),
-                                TitleText(text: '🕒 62 min'),
-                              ],
-                            ),
-                            SizedBox(height: 15.h),
-                            PrimaryButton(
-                                text: '운동 시작하기',
-                                onPressed: () {
-                                  context.read<LocateProvider>().setLocation(1);
-                                  Navigator.pushNamed(context, '/exercise');
-                                })
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 20.h),
-                      WidgetCard(
                         child: Column(children: [
-                          const ContentText(text: '김진욱 님, 운동은 잘 되어가고 있나요?'),
+                          ContentText(text: '${snapshot.data!} 님, 운동은 잘 되어가고 있나요?'),
                           const ContentText(text: '편하게 대화하세요!'),
                           SizedBox(height: 15.h),
                           PrimaryButton(
@@ -159,11 +118,33 @@ class _MainScreenState extends State<MainScreen> {
                           ],
                         ),
                       ),
-                      SizedBox(height: 20.h),
                     ],
                   ),
                 ),
-              ),
+              );
+            } else {
+              // 로그인 상태가 false일 경우 로그인 메시지 출력
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const TitleText(text: '아직 로그인을 안하셨나요?'),
+                    SizedBox(height: 10.h),
+                    const TitleText(text: '로그인 해주세요!'),
+                    SizedBox(height: 20.h),
+                    PrimaryButton(
+                      text: '로그인하기',
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/login');
+                      },
+                    ),
+                  ],
+                ),
+              );
+            }
+          },
+        ),
       ),
       bottomNavigationBar: const MainNavigationBar(),
     );

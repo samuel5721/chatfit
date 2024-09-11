@@ -1,3 +1,4 @@
+import 'package:chatfit/module/load_login.dart';
 import 'package:chatfit/providers/locate_provider.dart';
 import 'package:chatfit/theme.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,12 @@ class MainNavigationBar extends StatefulWidget {
 }
 
 class _MainNavigationBarState extends State<MainNavigationBar> {
-  void onTapFunction(int index) {
+  Future<void> onTapFunction(int index) async {
+    if (await getIsLogin(context) == false) {
+      Navigator.pushNamed(context, '/login');
+      return;
+    }
+
     int currentIndex =
         Provider.of<LocateProvider>(context, listen: false).getLocation();
     context.read<LocateProvider>().setLocation(index);
