@@ -22,26 +22,20 @@ class _FirstSurveyScreenState extends State<FirstSurveyScreen> {
   int _selectedIndex = -1;
   List<int> _selectedMultipleIndices = [];
 
-  List<String> avoidFoodList = [
-    "닭고기",
-    "우유",
-    "메밀",
-    "땅콩",
-    "대두",
-    "밀",
-    "고등어",
-    "게",
-    "새우",
-    "돼지고기",
-    "복숭아",
-    "토마토",
-    "소고기",
-  ];
-
   final List<Map<String, dynamic>> questions = [
     // 0: Welcome, 1: Text, 2: Single Choice, 3: Multiple Choice, 4: End
     {
       'type': 0,
+    },
+    {
+      'type': 2,
+      'content': '성별이 무엇인가요?',
+      'name': 'sex',
+      'options': [
+        '남자',
+        '여자',
+      ],
+      'replyNum': -1,
     },
     {
       'type': 1,

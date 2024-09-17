@@ -11,8 +11,12 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 Future<void> main() async {
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
   // 로그인 기록 확인
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -44,6 +48,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    FlutterNativeSplash.remove();
   }
 
   @override
@@ -77,7 +82,6 @@ class _MyAppState extends State<MyApp> {
                   textTheme: Typography.blackMountainView.apply(
                     bodyColor: KeyColor.grey100,
                     displayColor: KeyColor.grey100,
-                    
                     fontFamily: 'SUIT',
                   ),
                 ),

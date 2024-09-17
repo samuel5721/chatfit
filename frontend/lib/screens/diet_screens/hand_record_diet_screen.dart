@@ -5,13 +5,6 @@ import 'package:chatfit/theme.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
-// ! 존나 고쳐야 할 게 많은데 이유를 모르겠다
-// ! 이거 왜 안되는지 모르겠다
-// ! 이거 왜 안되는지 모르겠다
-// ! 이거 왜 안되는지 모르겠다
-// ! 이거 왜 안되는지 모르겠다
-// ! 이거 왜 안되는지 모르겠다
-// ! 이거 왜 안되는지 모르겠다
 class HandRecordDietScreen extends StatefulWidget {
   const HandRecordDietScreen({super.key});
 

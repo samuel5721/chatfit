@@ -260,6 +260,11 @@ class _WriteDietScreenState extends State<WriteDietScreen> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        SizedBox(
+          width: Layout.entireWidth(context) * 0.8,
+          height: Layout.entireHeight(context) * 0.3,
+          child: Image.asset('assets/images/balloon.png'),
+        ),
         const TitleText(text: '식단 기록이 완료되었어요!', fontSize: 22),
         SizedBox(height: 50.h),
         PrimaryButton(

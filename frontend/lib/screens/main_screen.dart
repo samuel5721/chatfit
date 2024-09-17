@@ -108,8 +108,7 @@ class _MainScreenState extends State<MainScreen> {
                       SizedBox(height: 20.h),
                       WidgetCard(
                         child: Column(children: [
-                          ContentText(
-                              text: '${snapshot.data!} 님, 운동은 잘 되어가고 있나요?'),
+                          ContentText(text: '운동은 잘 되어가고 있나요?'),
                           const ContentText(text: '편하게 대화하세요!'),
                           SizedBox(height: 15.h),
                           PrimaryButton(
@@ -164,8 +163,7 @@ class _MainScreenState extends State<MainScreen> {
                                   PrimaryButton(
                                       text: '식단 기록하기',
                                       onPressed: () {
-                                        Navigator.pushNamed(
-                                            context, '/diet_record');
+                                        Navigator.pushNamed(context, '/diet');
                                       }),
                                 ],
                               ),
@@ -182,8 +180,7 @@ class _MainScreenState extends State<MainScreen> {
                                   PrimaryButton(
                                       text: '식단 기록하기',
                                       onPressed: () {
-                                        Navigator.pushNamed(
-                                            context, '/diet_record');
+                                        Navigator.pushNamed(context, '/diet');
                                       }),
                                 ],
                               ),

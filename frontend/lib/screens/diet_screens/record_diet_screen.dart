@@ -314,15 +314,16 @@ class _CameraScreenState extends State<CameraScreen> {
   Widget _buildReconizeDiet() {
     return _isRecognizing
         ? const CircularProgressIndicator()
-        : Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const ContentText(text: '지금 드시고 있는 음식을'),
-              Row(children: [
+        : SizedBox(
+            width: Layout.entireWidth(context) * 0.9,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const ContentText(text: '지금 드시고 있는 음식을'),
                 TitleText(text: ' $menu', fontSize: 20),
                 const ContentText(text: ' 로 인식했어요.'),
-              ]),
-            ],
+              ],
+            ),
           );
   }
 
