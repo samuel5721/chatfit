@@ -68,6 +68,14 @@ class _ChatBoTScreenState extends State<ChatBoTScreen> {
         Map<String, dynamic>? userData = documentSnapshot.data();
 
         if (userData != null) {
+          // Firestore에서 가져온 데이터 내의 Timestamp 객체를 DateTime으로 변환
+          userData = userData.map((key, value) {
+            if (value is Timestamp) {
+              return MapEntry(key, value.toDate().toIso8601String());
+            }
+            return MapEntry(key, value);
+          });
+
           String jsonString = jsonEncode(userData);
           return jsonString;
         }
@@ -189,7 +197,9 @@ class _ChatBoTScreenState extends State<ChatBoTScreen> {
       responsePrompt = '너는 일상적인 대화에 적절하게 답변해야 해. 하나씩 차근차근 생각해보자.';
     }
     responsePrompt = responsePrompt +
-        '\n너가 대하는 사용자 정보는 다음과 같다:\n${getUserDataAsJson(context)}';
+        '\n너가 대하는 사용자 정보는 다음과 같다:\n${await getUserDataAsJson(context)}';
+    print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++' +
+        await getUserDataAsJson(context));
 
     const String model = 'gpt-4o';
     String apiKey = dotenv.env['OPENAI_API_KEY']!;

@@ -44,7 +44,9 @@ class FoodDetectionService:
                             "type": "text",
                             "text": (
                                 f"사진 안의 음식이 어떤 음식인지 알려줘. 그러나 너의 대답은 이 json의 음식 이름 중 하나로만 해야 해. {food_list_str}. "
-                                "무조건 음식 이름만 위의 json 중 하나에서 알려줘야해.\n"
+                                "무조건 음식 이름만 위의 json 중 하나에서 알려줘야 해.\n"
+                                "응답 형식은 다음과 같아.\n"
+                                "{'detected': [food1, food2, food3, ....]}"
                             )
                         },
                         {

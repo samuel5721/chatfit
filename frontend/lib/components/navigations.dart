@@ -41,11 +41,15 @@ class DietNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Navigation(
-      child: TitleText(
-        text: '${getUserName(context)} 님의 식단 기록이예요',
-        fontSize: 20,
-      ),
-    );
+    return FutureBuilder<String>(
+        future: getUserName(context),
+        builder: (context, snapshot) {
+          return Navigation(
+            child: TitleText(
+              text: '${snapshot.data} 님의 식단 기록이예요',
+              fontSize: 20,
+            ),
+          );
+        });
   }
 }

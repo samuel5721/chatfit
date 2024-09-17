@@ -4,16 +4,14 @@ import 'package:chatfit/components/buttons.dart';
 import 'package:chatfit/components/header.dart';
 import 'package:chatfit/components/navigations.dart';
 import 'package:chatfit/components/texts.dart';
+import 'package:chatfit/module/cnn_food_convert.dart';
 import 'package:chatfit/module/load_login.dart';
 import 'package:chatfit/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
-
-//! 사진 입력 확인 받은 후 식단 인식 -> 계속하기 진행
 
 class CameraScreen extends StatefulWidget {
   const CameraScreen({super.key});
@@ -35,10 +33,10 @@ class _CameraScreenState extends State<CameraScreen> {
   String time = ''; // will get in arguments
   String menu = '';
 
-  // 이미지를 가져오는 함수
-  Future getImage(ImageSource imageSource) async {
-    // pickedFile에 ImagePicker로 가져온 이미지가 담긴다.
-    final XFile? pickedFile = await picker.pickImage(source: imageSource);
+  // 이미지를 갤러리에서 가져오는 함수
+  Future getImage() async {
+    final XFile? pickedFile =
+        await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null && mounted) {
       setState(() {
         _image = XFile(pickedFile.path); // 가져온 이미지를 _image에 저장
@@ -119,15 +117,61 @@ class _CameraScreenState extends State<CameraScreen> {
 
       if (response.statusCode == 200) {
         var responseBody = await http.Response.fromStream(response);
-        print('응답 내용: ${responseBody.body}'); // 응답 내용을 확인하기 위해 출력
 
-        var jsonResponse = jsonDecode(responseBody.body);
+        // utf8 디코딩을 추가하여 깨짐 현상 해결
+        String decodedBody = utf8.decode(responseBody.bodyBytes);
 
-        // 서버에서 반환된 결과를 menu에 저장
-        setState(() {
-          menu = jsonResponse['detected'].join(", "); // 음식 이름들을 쉼표로 구분
-          _isRecognized = true;
-        });
+        print('응답 내용: $decodedBody'); // 응답 내용을 확인하기 위해 출력
+
+        var jsonResponse = jsonDecode(decodedBody);
+
+        if (jsonResponse['detected'].length == 0) {
+          // GPT로 요청을 보내는 로직
+          var gptRequest = http.MultipartRequest(
+            'POST',
+            Uri.parse('http://3.38.71.7:8000/api/detect_gpt'),
+          );
+
+          gptRequest.files.add(await http.MultipartFile.fromPath(
+            'image',
+            imageFile.path,
+          ));
+
+          var gptResponse = await gptRequest.send();
+
+          if (gptResponse.statusCode == 200) {
+            var gptResponseBody = await http.Response.fromStream(gptResponse);
+
+            // GPT 응답도 utf8 디코딩
+            String gptDecodedBody = utf8.decode(gptResponseBody.bodyBytes);
+
+            print('GPT 응답 내용: $gptDecodedBody');
+
+            var gptJsonResponse = jsonDecode(gptDecodedBody);
+
+            if (gptJsonResponse['detected'].length == 0) {
+              setState(() {
+                menu = '식단을 인식하지 못했어요.';
+                _isRecognized = true;
+              });
+              return;
+            }
+
+            setState(() {
+              menu = gptJsonResponse['detected'][0];
+              _isRecognized = true;
+            });
+          } else {
+            throw Exception(
+                'Failed to recognize diet with GPT. Status code: ${gptResponse.statusCode}');
+          }
+        } else {
+          //cnn으로 정의
+          setState(() {
+            menu = cnnMenuTranslations[jsonResponse['detected'][0]]!;
+            _isRecognized = true;
+          });
+        }
       } else {
         throw Exception(
             'Failed to recognize diet. Status code: ${response.statusCode}');
@@ -169,6 +213,7 @@ class _CameraScreenState extends State<CameraScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => getImage());
   }
 
   @override
@@ -190,35 +235,31 @@ class _CameraScreenState extends State<CameraScreen> {
               const Navigation(
                 child: TitleText(text: '식단을 입력하세요!', fontSize: 20),
               ),
-              (_image == null)
-                  ? Center(
-                      child: _inputImageBtns(),
-                    )
-                  : (_isSubmitting)
-                      ? const CircularProgressIndicator()
-                      : (_isSubmit)
-                          ? Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SizedBox(height: 20.h),
-                                _buildReconizeDiet(),
-                                SizedBox(height: 30.h),
-                                _buildPhotoArea(context),
-                                SizedBox(height: 20.h),
-                                _buildWrite(),
-                              ],
-                            )
-                          : Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SizedBox(height: 20.h),
-                                _buildContinue(),
-                                SizedBox(height: 30.h),
-                                _buildPhotoArea(context),
-                                SizedBox(height: 20.h),
-                                _buildUpload(),
-                              ],
-                            )
+              (_isSubmitting)
+                  ? const CircularProgressIndicator()
+                  : (_isSubmit)
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(height: 20.h),
+                            _buildReconizeDiet(),
+                            SizedBox(height: 30.h),
+                            _buildPhotoArea(context),
+                            SizedBox(height: 20.h),
+                            _buildWrite(),
+                          ],
+                        )
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(height: 20.h),
+                            _buildContinue(),
+                            SizedBox(height: 30.h),
+                            _buildPhotoArea(context),
+                            SizedBox(height: 20.h),
+                            _buildUpload(),
+                          ],
+                        )
             ],
           ),
         ),
@@ -231,16 +272,9 @@ class _CameraScreenState extends State<CameraScreen> {
       children: [
         const SizedBox(height: 20),
         PrimaryButton(
-          text: '카메라에서 열기',
-          onPressed: () {
-            getImage(ImageSource.camera);
-          },
-        ),
-        const SizedBox(height: 20),
-        PrimaryButton(
           text: '갤러리에서 열기',
           onPressed: () {
-            getImage(ImageSource.gallery);
+            getImage();
           },
         ),
       ],
@@ -269,9 +303,9 @@ class _CameraScreenState extends State<CameraScreen> {
         SizedBox(height: 15.h),
         SecondButton(
           onPressed: () {
-            getImage(ImageSource.camera);
+            getImage();
           },
-          text: "다시 촬영하기",
+          text: "다시 선택하기",
         ),
       ],
     );
@@ -315,7 +349,7 @@ class _CameraScreenState extends State<CameraScreen> {
       children: [
         PrimaryButton(
           onPressed: () {
-            Navigator.pushNamed(context, '/diet_write', arguments: {
+            Navigator.pushReplacementNamed(context, '/diet_write', arguments: {
               'imageId': _imageId,
               'imageUrl': _imageUrl,
               'menu': menu,
@@ -327,10 +361,19 @@ class _CameraScreenState extends State<CameraScreen> {
         SizedBox(height: 15.h),
         SecondButton(
           onPressed: () {
-            _removeImage();
-            setState(() {
-              _image = null;
+            Navigator.pushNamed(context, '/diet_hand_record', arguments: {
+              'imageId': _imageId,
+              'imageUrl': _imageUrl,
+              'menu': '',
+              'time': time
             });
+            // Navigator.pushReplacementNamed(context, '/diet_hand_record',
+            // arguments: {
+            //   'imageId': _imageId,
+            //   'imageUrl': _imageUrl,
+            //   'menu': '',
+            //   'time': time
+            // });
           },
           text: "직접 입력하기",
         ),

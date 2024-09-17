@@ -77,6 +77,7 @@ class _MyAppState extends State<MyApp> {
                   textTheme: Typography.blackMountainView.apply(
                     bodyColor: KeyColor.grey100,
                     displayColor: KeyColor.grey100,
+                    
                     fontFamily: 'SUIT',
                   ),
                 ),

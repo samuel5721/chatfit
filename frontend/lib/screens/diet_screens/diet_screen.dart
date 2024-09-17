@@ -63,7 +63,7 @@ class _DietRecordScreenState extends State<DietRecordScreen> {
   @override
   void initState() {
     super.initState();
-    _loadDietData(); // ! 시 발 련
+    _loadDietData();
   }
 
   @override
@@ -77,8 +77,8 @@ class _DietRecordScreenState extends State<DietRecordScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const DietNavigation(),
-              SizedBox(height: 20.h),
-              _intro(),
+              // SizedBox(height: 20.h),
+              // _intro(),
               SizedBox(height: 20.h),
               _dietArray(),
               SizedBox(height: 20.h),
@@ -94,13 +94,16 @@ class _DietRecordScreenState extends State<DietRecordScreen> {
 
   WidgetCard _intro() {
     return WidgetCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ContentText(text: '${getUserName(context)} 님은 1300 kcal 를 섭취했어요!'),
-          const ContentText(text: '목표 칼로리까지 325 kcal 남았어요!'),
-        ],
-      ),
+      child: FutureBuilder<String>(
+          future: getUserName(context),
+          builder: (context, snapshot) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ContentText(text: '${snapshot.data} 님은 1300 kcal 를 섭취했어요!'),
+              ],
+            );
+          }),
     );
   }
 
@@ -196,7 +199,10 @@ class MealCard extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: KeyColor.primaryBrand100,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/diet_record',
+                        arguments: time);
+                  },
                   child: Text(
                     '수정하기',
                     style: TextStyle(
