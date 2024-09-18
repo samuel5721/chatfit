@@ -27,8 +27,7 @@ Future<void> main() async {
   // Firebase 초기화
   await Firebase.initializeApp();
   await FirebaseAppCheck.instance.activate(
-    webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
-    androidProvider: AndroidProvider.debug,
+    androidProvider: AndroidProvider.playIntegrity,
     appleProvider: AppleProvider.appAttest,
   );
 
