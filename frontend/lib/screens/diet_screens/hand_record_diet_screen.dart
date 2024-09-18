@@ -144,18 +144,23 @@ class _HandRecordDietScreenState extends State<HandRecordDietScreen> {
                     onPressed: () {
                       if (menu.isNotEmpty) {
                         // menu 값이 있는지 확인 후 Navigator로 전달
-                        Navigator.pushNamed(context, '/diet_write', arguments: {
-                          'imageUrl': imageUrl,
-                          'menu': menu, // 선택된 menu 값을 전달
-                          'imageId': imageId,
-                          'time': time,
-                        });
+                        Navigator.pushNamed(
+                          context,
+                          '/diet_write',
+                          arguments: {
+                            'imageUrl': imageUrl,
+                            'menu': menu, // 선택된 menu 값을 전달
+                            'imageId': imageId,
+                            'time': time,
+                          },
+                        );
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text('메뉴를 선택해 주세요')),
                         );
                       }
-                    })
+                    },
+                  )
                 : const SizedBox(),
           ],
         ),

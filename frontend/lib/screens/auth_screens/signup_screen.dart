@@ -5,6 +5,7 @@ import 'package:chatfit/module/load_login.dart';
 import 'package:chatfit/theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -27,33 +28,63 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>(); // Form Key 추가
 
   String errorMessage = '';
-
   bool isLoading = false;
+  bool isAgreed = false; // 약관 동의 체크박스 상태
+
+  void _showTermsAndConditions() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: KeyColor.primaryDark300,
+          title: const Text('개인정보 수집·이용 및 제3자 제공 동의'),
+          content: SingleChildScrollView(
+            child: Text(
+              dotenv.env['PRIVACY_PILICY']!.replaceAll(r'\n', '\n'),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('닫기'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   void signUp() async {
-    if (_formKey.currentState!.validate()) {
+    if (_formKey.currentState!.validate() && isAgreed) {
+      // 약관 동의 상태 확인
       setState(() {
         isLoading = true;
       });
       try {
-        _firebaseAuth
-            .createUserWithEmailAndPassword(
-                email: _emailController.text,
-                password: _passwordController.text)
-            .then((value) {
-          setState(() {
-            isLoading = false;
-          });
-        });
+        // Ensure user creation is awaited
+        UserCredential userCredential =
+            await _firebaseAuth.createUserWithEmailAndPassword(
+          email: _emailController.text,
+          password: _passwordController.text,
+        );
 
-        _firestore.collection(_emailController.text).doc('private-info').set({
+        // Store additional user data in Firestore, use await here as well
+        await _firestore.collection('users').doc(userCredential.user?.uid).set({
           'name': _nameController.text,
-          'singup_date': DateTime.now(),
+          'signup_date': DateTime.now(),
         });
 
+        // Set the user email and login status
         setUserEmail(context, _emailController.text);
         await loadLoginStatus(context);
 
+        setState(() {
+          isLoading = false;
+        });
+
+        // Show dialog after successful registration
         showDialog(
           context: context,
           builder: (context) {
@@ -64,8 +95,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
               actions: [
                 TextButton(
                   onPressed: () async {
-                    setUserEmail(context, _emailController.text);
-                    await loadLoginStatus(context);
                     Navigator.pushNamed(context, '/survey');
                   },
                   child: const Text('확인'),
@@ -80,8 +109,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
           isLoading = false;
         });
       } catch (e) {
-        debugPrint('에러');
+        setState(() {
+          errorMessage = '오류가 발생했습니다.';
+          isLoading = false;
+        });
       }
+    } else if (!isAgreed) {
+      setState(() {
+        // 약관 동의가 안되었을 경우 에러 메시지 표시
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('개인정보 처리 약관에 동의해주세요.')),
+        );
+      });
     }
   }
 
@@ -116,6 +155,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  // 이메일, 비밀번호, 닉네임 입력 폼
                   _formField(
                       label: '이메일',
                       controller: _emailController,
@@ -135,6 +175,45 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       icon: Icons.person,
                       validator: validateNickname),
                   SizedBox(height: 20.h),
+
+                  // 개인정보 처리 동의 영역
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Checkbox(
+                        side: BorderSide(color: KeyColor.grey100),
+                        overlayColor: WidgetStatePropertyAll(KeyColor.grey100),
+                        value: isAgreed,
+                        onChanged: (value) {
+                          setState(() {
+                            isAgreed = value ?? false;
+                          });
+                        },
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          const Text(
+                            '개인정보 수집·이용 및 제3자 제공 동의',
+                            style: TextStyle(fontSize: 14),
+                          ),
+                          GestureDetector(
+                            onTap: _showTermsAndConditions, // 약관 팝업 표시
+                            child: const Text(
+                              '(확인하기)',
+                              style: TextStyle(
+                                fontSize: 12,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20.h),
+
+                  // 회원가입 버튼
                   SizedBox(
                     width: Layout.entireWidth(context),
                     height: Layout.bodyHeight(context) * 0.1,
@@ -156,12 +235,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  TextFormField _formField(
-      {required String label,
-      required TextEditingController controller,
-      required IconData icon,
-      required String? Function(String?) validator,
-      bool obscureText = false}) {
+  TextFormField _formField({
+    required String label,
+    required TextEditingController controller,
+    required IconData icon,
+    required String? Function(String?) validator,
+    bool obscureText = false,
+  }) {
     return TextFormField(
       controller: controller,
       decoration: InputDecoration(
@@ -177,7 +257,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
       obscureText: obscureText,
       validator: validator,
-      autovalidateMode: AutovalidateMode.onUserInteraction, // 유효성 검사를 입력 후에만 실행
+      autovalidateMode: AutovalidateMode.onUserInteraction,
     );
   }
 
