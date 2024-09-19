@@ -108,13 +108,13 @@ class _MainScreenState extends State<MainScreen> {
                       SizedBox(height: 20.h),
                       WidgetCard(
                         child: Column(children: [
-                          ContentText(text: '운동은 잘 되어가고 있나요?'),
+                          const ContentText(text: '운동은 잘 되어가고 있나요?'),
                           const ContentText(text: '편하게 대화하세요!'),
                           SizedBox(height: 15.h),
                           PrimaryButton(
                               text: '채팅 시작하기',
                               onPressed: () {
-                                context.read<LocateProvider>().setLocation(3);
+                                context.read<LocateProvider>().setLocation(2);
                                 Navigator.pushNamed(context, '/chatbot');
                               })
                         ]),
@@ -163,6 +163,9 @@ class _MainScreenState extends State<MainScreen> {
                                   PrimaryButton(
                                       text: '식단 기록하기',
                                       onPressed: () {
+                                        context
+                                            .read<LocateProvider>()
+                                            .setLocation(0);
                                         Navigator.pushNamed(context, '/diet');
                                       }),
                                 ],
@@ -180,6 +183,9 @@ class _MainScreenState extends State<MainScreen> {
                                   PrimaryButton(
                                       text: '식단 기록하기',
                                       onPressed: () {
+                                        context
+                                            .read<LocateProvider>()
+                                            .setLocation(0);
                                         Navigator.pushNamed(context, '/diet');
                                       }),
                                 ],

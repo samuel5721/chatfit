@@ -71,7 +71,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
         );
 
         // Store additional user data in Firestore, use await here as well
-        await _firestore.collection('users').doc(userCredential.user?.uid).set({
+        await _firestore
+            .collection(_emailController.text)
+            .doc('private-info')
+            .set({
           'name': _nameController.text,
           'signup_date': DateTime.now(),
         });

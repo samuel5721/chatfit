@@ -2,6 +2,7 @@ import 'package:chatfit/module/load_login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:speech_to_text/speech_to_text.dart' as stt;
@@ -138,12 +139,7 @@ class _ChatBoTScreenState extends State<ChatBoTScreen> {
       'messages': [
         {
           'role': 'system',
-          'content': '챗핏 이라는 헬스와 식단 관리 서비스에서 도와주는 트레이너.\n'
-              '개인 피트니스\n친절하고 간결하게 문장으로 대답. "-요" 끝나는 종결어미 사용\n\n'
-              '받은 질문이 헬스, 운동, 식단, 음식과 관련이 없다면 키값 value에 -1 을 반환.\n'
-              '헬스, 운동과 관련있다면, 개인 피트니스 코치로 대답을 할 있다고 판단되면 0을 반환.\n'
-              '음식과 식단과 관련이 있다면 개인 피트니스 코치로 대답을 할 있다고 판단되면 1을 반환.\n'
-              'json으로 반환하고 키값은 "value"',
+          'content': dotenv.env['CLASSIFY_PROMPT']!,
         },
         {
           'role': 'user',
@@ -187,14 +183,14 @@ class _ChatBoTScreenState extends State<ChatBoTScreen> {
 
     String responsePrompt;
     if (category == 0) {
-      responsePrompt = dotenv.env['BASIC_GENEGATE']!;
+      responsePrompt = dotenv.env['WORK_GENERATE']!;
     } else if (category == 1) {
       responsePrompt = dotenv.env['FOOD_RECOG_KCAL']!;
     } else {
       responsePrompt = '너는 일상적인 대화에 적절하게 답변해야 해. 하나씩 차근차근 생각해보자.';
     }
-    responsePrompt = responsePrompt +
-        '\n너가 대하는 사용자 정보는 다음과 같다:\n${await getUserDataAsJson(context)}';
+    responsePrompt =
+        '$responsePrompt\n너가 대하는 사용자 정보는 다음과 같다:\n${await getUserDataAsJson(context)}';
 
     const String model = 'gpt-4o';
     String apiKey = dotenv.env['OPENAI_API_KEY']!;
@@ -482,10 +478,10 @@ class BotChat extends StatelessWidget {
   final String message;
 
   const BotChat({
-    super.key,
+    Key? key,
     required this.message,
     required this.isLoading,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -494,6 +490,7 @@ class BotChat extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // 프로필 이미지 부분은 그대로 유지
           Container(
             width: 40.0.w,
             height: 40.0.w,
@@ -505,6 +502,7 @@ class BotChat extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
+          // 메시지 부분 수정
           Container(
             padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
             margin: const EdgeInsets.only(left: 10.0),
@@ -516,32 +514,27 @@ class BotChat extends StatelessWidget {
                 bottomLeft: Radius.circular(50),
               ),
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxWidth: MediaQuery.of(context).size.width * 0.6,
-                  ),
-                  child: (isLoading)
-                      ? SpinKitThreeBounce(
-                          color: Colors.white,
-                          size: 20.w,
-                        )
-                      : Text(
-                          message,
-                          style: TextStyle(
-                            color: KeyColor.grey100,
-                            fontSize: 14.sp,
-                            height: 1.5,
-                          ),
-                          softWrap: true,
-                          overflow: TextOverflow.visible,
+            child: isLoading
+                ? SpinKitThreeBounce(
+                    color: Colors.white,
+                    size: 20.w,
+                  )
+                : ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width * 0.6,
+                    ),
+                    child: MarkdownBody(
+                      data: message,
+                      styleSheet: MarkdownStyleSheet(
+                        p: TextStyle(
+                          color: KeyColor.grey100,
+                          fontSize: 14.sp,
+                          height: 1.5,
                         ),
-                ),
-              ],
-            ),
+                        // 필요에 따라 다른 스타일도 지정 가능
+                      ),
+                    ),
+                  ),
           ),
         ],
       ),
