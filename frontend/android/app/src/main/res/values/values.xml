@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="google_app_id" translatable="false">1:1087664966814:android:f950b7f9d853f56fc47f8f</string>
+    <string name="gcm_defaultSenderId" translatable="false">1087664966814</string>
+    <string name="default_web_client_id" translatable="false"></string> <!-- 웹 클라이언트 ID가 없으므로 비워 둠 -->
+    <string name="firebase_database_url" translatable="false">https://chatfit-aac41.firebaseio.com</string> <!-- Realtime Database를 사용하는 경우 -->
+    <string name="project_id" translatable="false">chatfit-aac41</string>
+</resources>

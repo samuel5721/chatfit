@@ -1,4 +1,4 @@
-package com.example.second_application
+package chatfit.second_application
 
 import io.flutter.embedding.android.FlutterActivity
 

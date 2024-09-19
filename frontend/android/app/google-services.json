@@ -7,9 +7,28 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:1087664966814:android:f950b7f9d853f56fc47f8f",
+        "android_client_info": {
+          "package_name": "chatfit.second_application"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8q847uT-HUr_r-cOSXZpvrVth3CjBHgQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:1087664966814:android:9a262ecc97b7f52bc47f8f",
         "android_client_info": {
-          "package_name": "com.example.second_application"
+          "package_name": "chatfit.second_application"
         }
       },
       "oauth_client": [],

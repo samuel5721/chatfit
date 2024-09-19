@@ -64,6 +64,6 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1087664966814',
     projectId: 'chatfit-aac41',
     storageBucket: 'chatfit-aac41.appspot.com',
-    iosBundleId: 'com.example.secondApplication',
+    iosBundleId: 'chatfit.secondApplication',
   );
 }
